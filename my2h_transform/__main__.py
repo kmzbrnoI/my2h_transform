@@ -15,7 +15,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from storage import BASE, BLT, BLW
+from storage import BASE, BLOR, BLT, BLW
 
 
 DB_FILE = './blk.db'
@@ -55,6 +55,47 @@ def main():
         print('--- Datasets ---')
         for dataset in datasets:
             print(dataset['type'])
+
+        print('--- PNL dataset ---')
+        print('Názvy panelů (a časovače), nedůležité')
+
+        print('--- OR dataset ---')
+        print('Oblasti řízení')
+        blors = []
+        for dataset in datasets[block_types.index('OR')]['data'][1:]:
+            data = dataset.split(';')
+            blor = BLOR(
+                id=data[3],
+                shortname=data[4],
+                name=data[4])
+            blors.append(blor)
+
+        session.add_all(blors)
+        session.commit()
+
+        print('--- TR L dataset ---')
+        print('Nepřináší žádnou novou informaci')
+
+        print('--- BL W dataset ---')
+        print('Koleje propojeny do tratí')
+        blws = []
+        for dataset in datasets[block_types.index('W')]['data'][1:]:
+            data = dataset.split(';')
+            blw = BLW(
+                id=data[3],
+                label=data[4],
+                name=data[6],
+                gate_type=data[7],
+                conn_1=data[10],
+                conn_2=data[11],
+                conn_3=data[12],
+                conn_4=data[13],
+                conn_5=data[14],
+                conn_6=data[15] if data[3] == str(341) else None)
+            blws.append(blw)
+
+        session.add_all(blws)
+        session.commit()
 
         print('--- BL T dataset ---')
         print('Zřejmě se jedná o koleje')
@@ -96,33 +137,6 @@ def main():
 
         session.add_all(blts)
         session.commit()
-
-        print('--- BL W dataset ---')
-        print('Koleje propojeny do tratí')
-        blws = []
-        for dataset in datasets[block_types.index('W')]['data'][1:]:
-            data = dataset.split(';')
-            blw = BLW(
-                id=data[3],
-                label=data[4],
-                name=data[6],
-                gate_type=data[7],
-                conn_1=data[10],
-                conn_2=data[11],
-                conn_3=data[12],
-                conn_4=data[13],
-                conn_5=data[14],
-                conn_6=data[15] if data[3] == str(341) else None)
-            blws.append(blw)
-
-        session.add_all(blws)
-        session.commit()
-
-        print('--- TR L dataset ---')
-        print('Nepřináší žádnou novou informaci')
-
-
-        #print(json.dumps(railway, sort_keys=True, indent=4))
 
 
 if __name__ == '__main__':
