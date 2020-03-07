@@ -9,9 +9,8 @@ Options:
   --version          Show version.
 """
 
-
-from docopt import docopt
 import json
+from docopt import docopt
 
 from storage import Storage
 
@@ -44,16 +43,16 @@ def main():
         for dataset in datasets:
             print(dataset['type'])
 
-        print('--- TR L blocks ---')
+        # print('--- TR L blocks ---')
         # block_types L = railway
         # spojovaci tabulka mezi zkratkou trati a kolejemi?
         # neobsahuje zadne ID, nutno nacit pozdeji
-        for dataset in datasets[block_types.index('L')]['data'][1:]:
-            data = dataset.split(';')
-            print(data)
-            railway = {
-                'name': data[3],
-            }
+        # for dataset in datasets[block_types.index('L')]['data'][1:]:
+        #    data = dataset.split(';')
+        #    print(data)
+        #    railway = {
+        #        'name': data[3],
+        #    }
             # print(json.dumps(railway, sort_keys=True, indent=4))
 
         print('--- BL T blocks ---')

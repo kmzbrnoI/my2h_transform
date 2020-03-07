@@ -1,3 +1,7 @@
+"""
+Database handler
+"""
+
 import os
 import sqlite3
 
@@ -6,13 +10,19 @@ DB_FILE = './blk.sql'
 
 
 def dict_factory(cursor, row):
-    d = {}
+    '''
+    Helper for getting dictionaries from sqlite3 queries
+    '''
+    dictionary = {}
     for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
+        dictionary[col[0]] = row[idx]
+    return dictionary
 
 
 class Storage:
+    '''
+    Class handling database
+    '''
 
     def __init__(self):
 
@@ -63,7 +73,9 @@ class Storage:
         self._conn.close()
 
     def save_blts(self, blts):
-
+        '''
+        Save records to blt table
+        '''
         if len(blts) == 0:
             return
 
