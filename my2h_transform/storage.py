@@ -25,6 +25,17 @@ class BLOR(BASE):
     name = Column(String)
 
 
+class BLOPM(BASE):
+
+    __tablename__ = 'blopms'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    blor = Column(Integer)
+    pnl = Column(String)
+    direction_L = Column(Integer)
+
+
 class BLT(BASE):
 
     __tablename__ = 'blts'

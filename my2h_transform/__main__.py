@@ -15,7 +15,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from storage import BASE, PNL, BLOR, BLT, BLW
+from storage import BASE, PNL, BLOR, BLOPM, BLT, BLW
 
 
 DB_FILE = './blk.db'
@@ -81,6 +81,16 @@ def main():
             blors.append(blor)
 
         session.add_all(blors)
+        session.commit()
+
+        print('--- OPM dataset ---')
+        blopms = []
+        for dataset in datasets[block_types.index('OPM')]['data'][1:]:
+            data = dataset.split(';')
+            blopm = BLOPM(id=data[3], name=data[5], blor=data[4], pnl=data[6], direction_L=data[8])
+            blopms.append(blopm)
+
+        session.add_all(blopms)
         session.commit()
 
         print('--- TR L dataset ---')
