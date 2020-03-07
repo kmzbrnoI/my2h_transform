@@ -8,6 +8,14 @@ from sqlalchemy.ext.declarative import declarative_base
 BASE = declarative_base()
 
 
+class PNL(BASE):
+
+    __tablename__ = 'pnls'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+
 class BLOR(BASE):
 
     __tablename__ = 'blors'

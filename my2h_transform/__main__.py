@@ -15,7 +15,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from storage import BASE, BLOR, BLT, BLW
+from storage import BASE, PNL, BLOR, BLT, BLW
 
 
 DB_FILE = './blk.db'
@@ -57,7 +57,17 @@ def main():
             print(dataset['type'])
 
         print('--- PNL dataset ---')
-        print('Názvy panelů (a časovače), nedůležité')
+        print('Názvy panelů')
+        pnls = []
+        for dataset in datasets[block_types.index('PNL')]['data'][2:]:
+            data = dataset.split(';')
+            pnl = PNL(
+                id=data[1],
+                name=data[2])
+            pnls.append(pnl)
+
+        session.add_all(pnls)
+        session.commit()
 
         print('--- OR dataset ---')
         print('Oblasti řízení')
