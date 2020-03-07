@@ -15,7 +15,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from storage import SQLBase, BLT
+from storage import BASE, BLT, BLW
 
 
 DB_FILE = './blk.db'
@@ -27,9 +27,10 @@ def main():
 
     if os.path.exists(DB_FILE):
         os.remove(DB_FILE)
+        print('File [{}] removed.'.format(DB_FILE))
 
     SQLEngine = create_engine('sqlite:///blk.db', echo=True)
-    SQLBase.metadata.create_all(SQLEngine)
+    BASE.metadata.create_all(SQLEngine)
     SQLSession = sessionmaker(bind=SQLEngine)
     session = SQLSession()
 
@@ -54,18 +55,6 @@ def main():
         print('--- Datasets ---')
         for dataset in datasets:
             print(dataset['type'])
-
-        # print('--- TR L blocks ---')
-        # block_types L = railway
-        # spojovaci tabulka mezi zkratkou trati a kolejemi?
-        # neobsahuje zadne ID, nutno nacist pozdeji
-        # for dataset in datasets[block_types.index('L')]['data'][1:]:
-        #    data = dataset.split(';')
-        #    print(data)
-        #    railway = {
-        #        'name': data[3],
-        #    }
-            # print(json.dumps(railway, sort_keys=True, indent=4))
 
         print('--- BL T blocks ---')
         # trate?
@@ -102,12 +91,33 @@ def main():
                 out2_S=data[35],
                 out3_S=data[36],
                 out4_S=data[37],
-                out5_S=data[38],
-            )
+                out5_S=data[38])
             blts.append(blt)
 
         session.add_all(blts)
         session.commit()
+
+        print('--- TR W blocks ---')
+        blws = []
+        for dataset in datasets[block_types.index('W')]['data'][1:]:
+            data = dataset.split(';')
+            blw = BLW(
+                id=data[3],
+                label=data[4],
+                name=data[6],
+                gate_type=data[7],
+                conn_1=data[10],
+                conn_2=data[11],
+                conn_3=data[12],
+                conn_4=data[13],
+                conn_5=data[14],
+                conn_6=data[15] if data[3] == str(341) else None)
+            blws.append(blw)
+
+        session.add_all(blws)
+        session.commit()
+
+        #print(json.dumps(railway, sort_keys=True, indent=4))
 
 
 if __name__ == '__main__':

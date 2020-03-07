@@ -5,10 +5,10 @@ Database handler
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
-SQLBase = declarative_base()
+BASE = declarative_base()
 
 
-class BLT(SQLBase):
+class BLT(BASE):
 
     __tablename__ = 'blts'
 
@@ -42,3 +42,18 @@ class BLT(SQLBase):
     out3_S = Column(String)
     out4_S = Column(String)
     out5_S = Column(String)
+
+
+class BLW(BASE):
+    __tablename__ = 'blws'
+
+    id = Column(Integer, primary_key=True)
+    label = Column(String)
+    name = Column(String)
+    gate_type = Column(String)
+    conn_1 = Column(String)
+    conn_2 = Column(String)
+    conn_3 = Column(String)
+    conn_4 = Column(String)
+    conn_5 = Column(String)
+    conn_6 = Column(String)
