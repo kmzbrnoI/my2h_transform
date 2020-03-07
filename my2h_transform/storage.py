@@ -1,4 +1,8 @@
+import os
 import sqlite3
+
+
+DB_FILE = './blk.sql'
 
 
 def dict_factory(cursor, row):
@@ -12,7 +16,10 @@ class Storage:
 
     def __init__(self):
 
-        self._conn = sqlite3.connect('./blk.sql')
+        if os.path.exists(DB_FILE):
+            os.remove(DB_FILE)
+
+        self._conn = sqlite3.connect(DB_FILE)
         self._conn.row_factory = dict_factory
         self._cursor = self._conn.cursor()
 
