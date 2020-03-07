@@ -29,7 +29,7 @@ def main():
         os.remove(DB_FILE)
         print('File [{}] removed.'.format(DB_FILE))
 
-    SQLEngine = create_engine('sqlite:///blk.db', echo=True)
+    SQLEngine = create_engine('sqlite:///blk.db', echo=False)
     BASE.metadata.create_all(SQLEngine)
     SQLSession = sessionmaker(bind=SQLEngine)
     session = SQLSession()
@@ -56,8 +56,8 @@ def main():
         for dataset in datasets:
             print(dataset['type'])
 
-        print('--- BL T blocks ---')
-        # trate?
+        print('--- BL T dataset ---')
+        print('Zřejmě se jedná o koleje')
         blts = []
         for dataset in datasets[block_types.index('T')]['data'][1:]:
             data = dataset.split(';')
@@ -97,7 +97,8 @@ def main():
         session.add_all(blts)
         session.commit()
 
-        print('--- TR W blocks ---')
+        print('--- BL W dataset ---')
+        print('Koleje propojeny do tratí')
         blws = []
         for dataset in datasets[block_types.index('W')]['data'][1:]:
             data = dataset.split(';')
@@ -116,6 +117,10 @@ def main():
 
         session.add_all(blws)
         session.commit()
+
+        print('--- TR L dataset ---')
+        print('Nepřináší žádnou novou informaci')
+
 
         #print(json.dumps(railway, sort_keys=True, indent=4))
 
