@@ -36,6 +36,16 @@ class BLOPM(BASE):
     direction_L = Column(Integer)
 
 
+class BLOPD(BASE):
+
+    __tablename__ = 'blopds'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    blor = Column(Integer)
+    pnl = Column(String)
+
+
 class BLT(BASE):
 
     __tablename__ = 'blts'
