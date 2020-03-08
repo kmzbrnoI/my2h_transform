@@ -221,3 +221,25 @@ class BLM(BASE):
     det4 = Column(String)
     boost = Column(String)
     power_source = Column(String)
+
+
+class BLK(BASE):
+
+    __tablename__ = 'blks'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    pst1 = Column(String)
+    pst2 = Column(String)
+    velocity = Column(Integer)
+    det1 = Column(String)
+    det2 = Column(String)
+    det3 = Column(String)
+    det4 = Column(String)
+    boost = Column(String)
+    power_source = Column(String)
+    in1L = Column(String)
+    in2L = Column(String)
+    in1S = Column(String)
+    in2S = Column(String)
