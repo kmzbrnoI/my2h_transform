@@ -179,3 +179,27 @@ class BLE(BASE):
     out3 = Column(String)
     out4 = Column(String)
     out5 = Column(String)
+
+
+class BLV(BASE):
+
+    __tablename__ = 'blvs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    blok_s1 = Column(String)
+    blok_s2 = Column(String)
+    ez = Column(Integer)
+    pst1 = Column(String)
+    pst2 = Column(String)
+    hw = Column(Integer)
+    out1 = Column(String)
+    out2 = Column(String)
+    in1 = Column(String)
+    in2 = Column(String)
+    outB1 = Column(String)
+    outB2 = Column(String)
+    inB1 = Column(String)
+    inB2 = Column(String)
+    zdroj = Column(String)
