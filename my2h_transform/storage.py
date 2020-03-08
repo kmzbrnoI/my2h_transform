@@ -243,3 +243,16 @@ class BLK(BASE):
     in2L = Column(String)
     in1S = Column(String)
     in2S = Column(String)
+
+
+class BLUV(BASE):
+
+    __tablename__ = 'bluvs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    direction = Column(Integer)
+    souhlas = Column(Integer)
+    nvID = Column(String)
+    pocetID = Column(Integer)
