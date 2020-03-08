@@ -256,3 +256,14 @@ class BLUV(BASE):
     souhlas = Column(Integer)
     nvID = Column(String)
     pocetID = Column(Integer)
+
+
+class BLQ(BASE):
+
+    __tablename__ = 'blqs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    bluv = Column(String)
+    pocetID = Column(Integer)
