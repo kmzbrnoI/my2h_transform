@@ -320,6 +320,29 @@ def main():
         session.add_all(blms)
         session.commit()
 
+        print('--- S dataset ---')
+        # nacteno do tabulky pro M dataset
+        blms = []
+        for dataset in datasets[block_types.index('S')]['data'][1:]:
+            data = dataset.split(';')
+            blm = BLM(
+                id=data[3],
+                blor=data[4].split(':', 1)[0],
+                name=data[5],
+                pst1=data[10],
+                pst2=data[11],
+                velocity=data[12],
+                det1=data[15],
+                det2=data[16],
+                det3=data[17],
+                det4=data[18],
+                boost=data[19],
+                power_source=data[20])
+            blms.append(blm)
+
+        session.add_all(blms)
+        session.commit()
+
 
 if __name__ == '__main__':
     main()
