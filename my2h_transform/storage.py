@@ -83,6 +83,7 @@ class BLT(BASE):
 
 
 class BLW(BASE):
+
     __tablename__ = 'blws'
 
     id = Column(Integer, primary_key=True)
@@ -95,3 +96,27 @@ class BLW(BASE):
     conn_4 = Column(String)
     conn_5 = Column(String)
     conn_6 = Column(String)
+
+
+class BLH(BASE):
+
+    __tablename__ = 'blhs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    posun = Column(Integer)
+    direction = Column(Integer)
+    skupinNv = Column(String)
+    pst1 = Column(String)
+    pst2 = Column(String)
+    typ = Column(Integer)
+    hw = Column(Integer)
+    out1 = Column(String)
+    out2 = Column(String)
+    out3 = Column(String)
+    out4 = Column(String)
+    out5 = Column(String)
+    usek1 = Column(String)
+    usek2 = Column(String)
+    blokUV = Column(String)
