@@ -15,7 +15,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from storage import BASE, PNL, BLOR, BLOPM, BLOPD, BLT, BLW, BLH
+from storage import BASE, PNL, BLOR, BLOPM, BLOPD, BLT, BLW, BLH, BLB
 
 
 DB_FILE = './blk.db'
@@ -194,6 +194,33 @@ def main():
             blhs.append(blh)
 
         session.add_all(blhs)
+        session.commit()
+
+        print('--- B dataset ---')
+        blbs = []
+        for dataset in datasets[block_types.index('B')]['data'][1:]:
+            data = dataset.split(';')
+            print(data)
+            blb = BLB(
+                id=data[3],
+                blor=data[4].split(':', 1)[0],
+                name=data[5],
+                direction=data[8],
+                skupinNv=data[9],
+                pst1=data[11],
+                pst2=data[12],
+                typ=data[13],
+                hw=data[14],
+                out1=data[15],
+                out2=data[16],
+                out3=data[17],
+                out4=data[18],
+                out5=data[19],
+                usek1=data[21],
+                usek2=data[22])
+            blbs.append(blb)
+
+        session.add_all(blbs)
         session.commit()
 
 

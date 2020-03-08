@@ -120,3 +120,25 @@ class BLH(BASE):
     usek1 = Column(String)
     usek2 = Column(String)
     blokUV = Column(String)
+
+
+class BLB(BASE):
+
+    __tablename__ = 'blbs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    direction = Column(Integer)
+    skupinNv = Column(String)
+    pst1 = Column(String)
+    pst2 = Column(String)
+    typ = Column(Integer)
+    hw = Column(Integer)
+    out1 = Column(String)
+    out2 = Column(String)
+    out3 = Column(String)
+    out4 = Column(String)
+    out5 = Column(String)
+    usek1 = Column(String)
+    usek2 = Column(String)
