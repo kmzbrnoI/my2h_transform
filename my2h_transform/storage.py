@@ -2,8 +2,11 @@
 Database handler
 """
 
+from sqlalchemy import ForeignKey
 from sqlalchemy import Column, Integer, String
+#from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+
 
 BASE = declarative_base()
 
@@ -16,9 +19,9 @@ class PNL(BASE):
     name = Column(String)
 
 
-class BLOR(BASE):
+class Control_Area(BASE):
 
-    __tablename__ = 'blors'
+    __tablename__ = 'control_areas'
 
     id = Column(Integer, primary_key=True)
     shortname = Column(String)
@@ -82,7 +85,7 @@ class BLH(BASE):
     __tablename__ = 'blhs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     posun = Column(Integer)
     direction = Column(Integer)
@@ -106,7 +109,7 @@ class BLB(BASE):
     __tablename__ = 'blbs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     direction = Column(Integer)
     skupinNv = Column(String)
@@ -128,7 +131,7 @@ class BLC(BASE):
     __tablename__ = 'blcs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     typ = Column(Integer)
     hw = Column(Integer)
@@ -165,7 +168,7 @@ class BLV(BASE):
     __tablename__ = 'blvs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     blok_s1 = Column(String)
     blok_s2 = Column(String)
@@ -189,7 +192,7 @@ class BLM(BASE):
     __tablename__ = 'blms'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     pst1 = Column(String)
     pst2 = Column(String)
@@ -207,7 +210,7 @@ class BLK(BASE):
     __tablename__ = 'blks'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     pst1 = Column(String)
     pst2 = Column(String)
@@ -229,7 +232,7 @@ class BLUV(BASE):
     __tablename__ = 'bluvs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     direction = Column(Integer)
     souhlas = Column(Integer)
@@ -242,7 +245,7 @@ class BLQ(BASE):
     __tablename__ = 'blqs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     bluv = Column(String)
     pocetID = Column(Integer)
@@ -253,7 +256,7 @@ class BLEZ(BASE):
     __tablename__ = 'blezs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     blv = Column(String)
 
@@ -263,7 +266,7 @@ class BLR(BASE):
     __tablename__ = 'blrs'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     blk = Column(String)
     out = Column(String)
@@ -274,7 +277,7 @@ class BLP(BASE):
     __tablename__ = 'blps'
 
     id = Column(Integer, primary_key=True)
-    blor = Column(Integer)
+    control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
     typ = Column(String)
     inUzav = Column(String)

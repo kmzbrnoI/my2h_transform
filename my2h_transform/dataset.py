@@ -3,7 +3,7 @@ Save datasets into database
 """
 
 from utils import DATASET_TYPES
-from storage import PNL, BLOR, BLT, BLW, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
+from storage import PNL, Control_Area, BLT, BLW, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
 
 
 def save_datasets(session, datasets):
@@ -20,17 +20,17 @@ def save_datasets(session, datasets):
     session.add_all(pnls)
     session.commit()
 
-    print('--- OR dataset ---')
-    blors = []
+    print('Control_Area')
+    control_areas = []
     for dataset in datasets[DATASET_TYPES.index('OR')]['data'][1:]:
         data = dataset.split(';')
-        blor = BLOR(
+        control_area = Control_Area(
             id=data[3],
             shortname=data[4],
-            name=data[4])
-        blors.append(blor)
+            name=data[5])
+        control_areas.append(control_area)
 
-    session.add_all(blors)
+    session.add_all(control_areas)
     session.commit()
 
     print('--- BL W dataset ---')
@@ -99,7 +99,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blh = BLH(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             posun=data[6],
             direction=data[8],
@@ -127,7 +127,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blb = BLB(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             direction=data[8],
             skupinNv=data[9],
@@ -153,7 +153,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blc = BLC(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             typ=data[13],
             hw=data[14],
@@ -201,7 +201,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blv = BLV(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             blok_s1=data[6],
             blok_s2=data[7],
@@ -229,7 +229,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blm = BLM(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             pst1=data[10],
             pst2=data[11],
@@ -252,7 +252,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blm = BLM(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             pst1=data[10],
             pst2=data[11],
@@ -274,7 +274,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blk = BLK(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             pst1=data[10],
             pst2=data[11],
@@ -300,7 +300,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         bluv = BLUV(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             direction=data[6],
             souhlas=data[7],
@@ -317,7 +317,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blq = BLQ(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             bluv=data[6],
             pocetID=data[7])
@@ -335,7 +335,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blez = BLEZ(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             blv=data[24])
         blezs.append(blez)
@@ -349,7 +349,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blr = BLR(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             blk=data[6],
             out=data[15])
@@ -364,7 +364,7 @@ def save_datasets(session, datasets):
         data = dataset.split(';')
         blp = BLP(
             id=data[3],
-            blor=data[4].split(':', 1)[0],
+            control_area=data[4].split(':', 1)[0],
             name=data[5],
             typ=data[14],
             inUzav=data[15],

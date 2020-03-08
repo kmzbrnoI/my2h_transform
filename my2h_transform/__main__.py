@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker
 
 from utils import DATASET_TYPES, remove_file, load_datasets
 from dataset import save_datasets
-from storage import BASE
+from storage import BASE, Control_Area
 
 
 def main():
@@ -47,6 +47,10 @@ def main():
         BASE.metadata.create_all(SQLEngine)
         SQLSession = sessionmaker(bind=SQLEngine)
         session = SQLSession()
+
+        print('Control Areas')
+        for area in session.query(Control_Area).order_by(Control_Area.name):
+            print('  {}\t{}'.format(area.id, area.name))
 
 
 if __name__ == '__main__':
