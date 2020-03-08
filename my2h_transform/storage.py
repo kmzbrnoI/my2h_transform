@@ -25,27 +25,6 @@ class BLOR(BASE):
     name = Column(String)
 
 
-class BLOPM(BASE):
-
-    __tablename__ = 'blopms'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    blor = Column(Integer)
-    pnl = Column(String)
-    direction_L = Column(Integer)
-
-
-class BLOPD(BASE):
-
-    __tablename__ = 'blopds'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    blor = Column(Integer)
-    pnl = Column(String)
-
-
 class BLT(BASE):
 
     __tablename__ = 'blts'
@@ -267,3 +246,24 @@ class BLQ(BASE):
     name = Column(String)
     bluv = Column(String)
     pocetID = Column(Integer)
+
+
+class BLEZ(BASE):
+
+    __tablename__ = 'blezs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    blv = Column(String)
+
+
+class BLR(BASE):
+
+    __tablename__ = 'blrs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    blk = Column(String)
+    out = Column(String)

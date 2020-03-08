@@ -15,7 +15,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from storage import BASE, PNL, BLOR, BLOPM, BLOPD, BLT, BLW, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ
+from storage import BASE, PNL, BLOR, BLT, BLW, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR
 
 
 DB_FILE = './blk.db'
@@ -81,26 +81,6 @@ def main():
             blors.append(blor)
 
         session.add_all(blors)
-        session.commit()
-
-        print('--- OPM dataset ---')
-        blopms = []
-        for dataset in datasets[block_types.index('OPM')]['data'][1:]:
-            data = dataset.split(';')
-            blopm = BLOPM(id=data[3], name=data[5], blor=data[4], pnl=data[6], direction_L=data[8])
-            blopms.append(blopm)
-
-        session.add_all(blopms)
-        session.commit()
-
-        print('--- OPD dataset ---')
-        blopds = []
-        for dataset in datasets[block_types.index('OPD')]['data'][1:]:
-            data = dataset.split(';')
-            blopd = BLOPD(id=data[3], name=data[5], blor=data[4], pnl=data[6])
-            blopds.append(blopd)
-
-        session.add_all(blopds)
         session.commit()
 
         print('--- TR L dataset ---')
@@ -399,6 +379,38 @@ def main():
             blqs.append(blq)
 
         session.add_all(blqs)
+        session.commit()
+
+        # PST je prazdne
+        # N je prazdne
+
+        print('--- EZ dataset ---')
+        blezs = []
+        for dataset in datasets[block_types.index('EZ')]['data'][1:]:
+            data = dataset.split(';')
+            blez = BLEZ(
+                id=data[3],
+                blor=data[4].split(':', 1)[0],
+                name=data[5],
+                blv=data[24])
+            blezs.append(blez)
+
+        session.add_all(blezs)
+        session.commit()
+
+        print('--- R dataset ---')
+        blrs = []
+        for dataset in datasets[block_types.index('R')]['data'][1:]:
+            data = dataset.split(';')
+            blr = BLR(
+                id=data[3],
+                blor=data[4].split(':', 1)[0],
+                name=data[5],
+                blk=data[6],
+                out=data[15])
+            blrs.append(blr)
+
+        session.add_all(blrs)
         session.commit()
 
 
