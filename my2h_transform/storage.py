@@ -142,3 +142,22 @@ class BLB(BASE):
     out5 = Column(String)
     usek1 = Column(String)
     usek2 = Column(String)
+
+
+class BLC(BASE):
+
+    __tablename__ = 'blcs'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    typ = Column(Integer)
+    hw = Column(Integer)
+    out1 = Column(String)
+    out2 = Column(String)
+    out3 = Column(String)
+    out4 = Column(String)
+    out5 = Column(String)
+    skupina1 = Column(String)
+    skupina2 = Column(String)
+    skupina3 = Column(String)
