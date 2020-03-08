@@ -1,6 +1,7 @@
 """My2h JOP Transform Utility
 Usage:
-  my2h_transform.py load_blocks <myjop_blk_file> <output_file>
+  my2h_transform.py load_blocks <myjop_blk_file> <output_db_file>
+  my2h_transform.py show_blocks <source_db_file>
   my2h_transform.py (-h | --help)
   my2h_transform.py --version
 
@@ -27,7 +28,7 @@ def main():
 
     if args['load_blocks']:
 
-        output_file = os.path.abspath(args['<output_file>'])
+        output_file = os.path.abspath(args['<output_db_file>'])
         remove_file(output_file)
 
         SQLEngine = create_engine('sqlite:///{}'.format(output_file), echo=False)
@@ -37,6 +38,15 @@ def main():
 
         datasets = load_datasets(args['<myjop_blk_file>'])
         save_datasets(session, datasets)
+
+    if args['show_blocks']:
+
+        source_file = os.path.abspath(args['<source_db_file>'])
+
+        SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
+        BASE.metadata.create_all(SQLEngine)
+        SQLSession = sessionmaker(bind=SQLEngine)
+        session = SQLSession()
 
 
 if __name__ == '__main__':
