@@ -267,3 +267,20 @@ class BLR(BASE):
     name = Column(String)
     blk = Column(String)
     out = Column(String)
+
+
+class BLP(BASE):
+
+    __tablename__ = 'blps'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    typ = Column(String)
+    inUzav = Column(String)
+    inOtev = Column(String)
+    inAnulace = Column(String)
+    inUzZav = Column(String)
+    outUzav = Column(String)
+    outNouzOtev = Column(String)
+    outBlokPoz = Column(String)
