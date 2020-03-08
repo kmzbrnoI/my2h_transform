@@ -161,3 +161,21 @@ class BLC(BASE):
     skupina1 = Column(String)
     skupina2 = Column(String)
     skupina3 = Column(String)
+
+
+class BLE(BASE):
+
+    __tablename__ = 'bles'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    trat1 = Column(String)
+    trat2 = Column(String)
+    direction = Column(Integer)
+    typ = Column(Integer)
+    hw = Column(Integer)
+    out1 = Column(String)
+    out2 = Column(String)
+    out3 = Column(String)
+    out4 = Column(String)
+    out5 = Column(String)
