@@ -203,3 +203,21 @@ class BLV(BASE):
     inB1 = Column(String)
     inB2 = Column(String)
     zdroj = Column(String)
+
+
+class BLM(BASE):
+
+    __tablename__ = 'blms'
+
+    id = Column(Integer, primary_key=True)
+    blor = Column(Integer)
+    name = Column(String)
+    pst1 = Column(String)
+    pst2 = Column(String)
+    velocity = Column(Integer)
+    det1 = Column(String)
+    det2 = Column(String)
+    det3 = Column(String)
+    det4 = Column(String)
+    boost = Column(String)
+    power_source = Column(String)
