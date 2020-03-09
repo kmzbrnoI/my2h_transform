@@ -18,7 +18,7 @@ from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from utils import DATASET_TYPES, remove_file, load_datasets
+from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
 from storage import BASE
 from writer import write_track_section, write_signal, write_junction, write_disconnector
@@ -73,8 +73,11 @@ def main():
         session = SQLSession()
 
         map_ = ids_old_to_new(session)
-        for key, val in map_:
-            print(key, val)
+
+        all_blocks_ = all_blocks(session)
+        for old_id, new_id in sorted(map_.items(), key=lambda kv: kv[1]):
+            if all_blocks_[old_id].control_area == 1:
+                print(new_id, all_blocks_[old_id].name)
 
 if __name__ == '__main__':
     main()

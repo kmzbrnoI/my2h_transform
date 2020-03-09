@@ -1,5 +1,5 @@
-from storage import Control_Area, Railway, Track_Section, Signal, Junction, Disconnector
-from typing import Dict
+from storage import Railway, Track_Section, Signal, Junction, Disconnector, BLK, BLM
+from typing import Dict, List, Any
 
 
 AREAS_REMAP = {
@@ -15,10 +15,83 @@ AREAS_REMAP = {
     319: 10000,  # Ivancice
     584: 11000,  # Namest
     626: 20000,  # Depo
+    # 100 000+ 'trať' + everyting about 'trať'
 }
+
+"""
+0-100 Junctions
+100-200 Railways
+"""
+
+
+def _blocks(session, block: type) -> List[Any]:
+    return session.query(block).order_by(block.control_area, block.id).all()
+
+
+def _blocks_old_to_new(blocks: List[Any], start: int, limit: int) -> Dict[int, int]:
+    remap = {}
+    count_per_area = {}
+
+    for block in blocks:
+        remap[block.id] = AREAS_REMAP[block.control_area] + count_per_area.get(block.control_area, 0) + start
+        count_per_area[block.control_area] = count_per_area.get(block.control_area, 0) + 1
+
+    for area_id, count in count_per_area.items():
+        assert count < limit, f'Count in area {area_id} overflow!'
+        if count > limit-10:
+            print(f'WARN: in area {area_id} less than 10 free IDs left!')
+
+    return remap
 
 
 def ids_old_to_new(session) -> Dict[int, int]:
-    junctions = session.query(Junction).order_by(Junction.id, Junction.control_area).all()
-    print(junctions[:10])
-    return {}
+    remap = {}
+
+    # junctions 0-99
+    remap.update(_blocks_old_to_new(
+        _blocks(session, Junction), start=0, limit=100,
+    ))
+
+    # station railway 100-149
+    blks = _blocks(session, BLK)
+    remap.update(_blocks_old_to_new(
+        filter(lambda blk: blk.name.endswith('K'), blks),
+        start=100, limit=50,
+    ))
+
+    # weird start railway (like "vlečka") 150-169
+    remap.update(_blocks_old_to_new(
+        filter(lambda blk: not blk.name.endswith('K'), blks),
+        start=150, limit=20,
+    ))
+
+    # railways with junction in 'zhlavi' part of the station 170-219
+    remap.update(_blocks_old_to_new(
+        _blocks(session, BLM), start=170, limit=50,
+    ))
+
+    # IR: 300-399
+
+    # Signals main: 400-449
+    signals = _blocks(session, Signal)
+    remap.update(_blocks_old_to_new(
+        filter(lambda signal: signal.signal_type == 'hlavni', signals),
+        start=400, limit=50,
+    ))
+
+    # Signals shunting: 450-499
+    remap.update(_blocks_old_to_new(
+        filter(lambda signal: signal.signal_type == 'seradovaci', signals),
+        start=450, limit=50,
+    ))
+
+    # 500-599 disconnector
+    remap.update(_blocks_old_to_new(
+        _blocks(session, Disconnector), start=500, limit=100,
+    ))
+
+    # remaining: railways, track_sections
+    # TODO: autoblok to remap
+
+
+    return remap
