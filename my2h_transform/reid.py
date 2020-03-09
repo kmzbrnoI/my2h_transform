@@ -1,5 +1,5 @@
 from storage import Track_Section, Signal, Junction, Disconnector, BLK, BLM
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Iterable
 
 
 AREAS_REMAP = {
@@ -23,9 +23,9 @@ def _blocks(session, block: type) -> List[Any]:
     return session.query(block).order_by(block.control_area, block.id).all()
 
 
-def _blocks_old_to_new(blocks: List[Any], start: int, limit: int) -> Dict[int, int]:
+def _blocks_old_to_new(blocks: Iterable[Any], start: int, limit: int) -> Dict[int, int]:
     remap = {}
-    count_per_area = {}
+    count_per_area: Dict[int, int] = {}
 
     for block in blocks:
         remap[block.id] = AREAS_REMAP[block.control_area] + count_per_area.get(block.control_area, 0) + start
