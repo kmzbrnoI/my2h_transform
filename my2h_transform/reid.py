@@ -1,4 +1,4 @@
-from storage import Railway, Track_Section, Signal, Junction, Disconnector, BLK, BLM
+from storage import Track_Section, Signal, Junction, Disconnector, BLK, BLM
 from typing import Dict, List, Any
 
 
@@ -17,11 +17,6 @@ AREAS_REMAP = {
     626: 20000,  # Depo
     # 100 000+ 'trať' + everyting about 'trať'
 }
-
-"""
-0-100 Junctions
-100-200 Railways
-"""
 
 
 def _blocks(session, block: type) -> List[Any]:
