@@ -77,6 +77,11 @@ class Track_Section(BASE):
     out4_S = Column(String)
     out5_S = Column(String)
 
+    def __str__(self) -> str:
+        return self.name
+
+    __repr__ = __str__
+
 
 class Signal(BASE):
 
@@ -106,6 +111,11 @@ class Signal(BASE):
     skupina3 = Column(String)
     trat1 = Column(String)
     trat2 = Column(String)
+
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
 
 
 class Junction(BASE):
