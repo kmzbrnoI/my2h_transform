@@ -90,8 +90,37 @@ def ids_old_to_new(session) -> Dict[int, int]:
         _blocks(session, Disconnector), start=500, limit=100,
     ))
 
-    # remaining: railways, track_sections
-    # TODO: autoblok to remap
 
+    TRAT_HARD_ORDER = [
+        343, 344,  # Sk-hr
+        339, 340,  # Hr-Sk
+        322,  # Os-Sk
+        345,  # Sk-Po
+        363,  # Po-Me
+        628,  # Os-Me
+        290,  # Po-Hr
+        342,  # Sy-Os
+        341,  # Le-Sy
+        578,  # Br-Le
+        422,  # Iv-Os
+        619,  # Na-Iv
+    ]
+
+    i = 0
+    for trat in TRAT_HARD_ORDER:
+        trat_id = 100000 + i*100
+        remap[trat] = trat_id
+
+        railways = session.query(Track_Section).filter(Track_Section.railway == trat).\
+            order_by(Track_Section.id).all()
+        for j, railway in enumerate(railways):
+            remap[railway.id] = trat_id + 10 + j
+
+        signals = session.query(Signal).filter(Signal.signal_type == 'autoblok', Signal.trat1 == trat).\
+            order_by(Signal.id).all()
+        for j, signal in enumerate(signals):
+            remap[signal.id] = trat_id + 50 + j
+
+        i += 1
 
     return remap
