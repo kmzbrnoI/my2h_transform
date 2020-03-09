@@ -1,4 +1,4 @@
-from storage import Control_Area, Railway, Track_Section, Signal, Junction
+from storage import Control_Area, Railway, Track_Section, Signal, Junction, Disconnector
 
 
 def write_track_section(session, config):
@@ -138,3 +138,24 @@ def write_junction(session, config):
             data['RCSp3'] = RCSp3
 
         config[junction.id] = data
+
+
+def write_disconnector(session, config):
+
+    for disconnector, area in session.query(
+            Disconnector, Control_Area).filter(Disconnector.control_area == Control_Area.id).order_by(Disconnector.id):
+
+        data = {
+            'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0].capitalize(), disconnector.name),
+            'typ': 8,
+        }
+
+        RCSb0 = int(disconnector.out.split(':', 1)[0])
+        RCSp0 = int(disconnector.out.split(':', 1)[1])
+
+        data['RCScnt'] = 1
+
+        data['RCSb0'] = RCSb0
+        data['RCSp0'] = RCSp0
+
+        config[disconnector.id] = data

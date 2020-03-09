@@ -3,7 +3,7 @@ Save datasets into database
 """
 
 from utils import DATASET_TYPES
-from storage import PNL, Control_Area, Railway, Track_Section, Signal, Junction, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
+from storage import PNL, Control_Area, Railway, Track_Section, Signal, Junction, Disconnector, BLM, BLK, BLUV, BLQ, BLEZ, BLP
 
 
 def save_control_area(session, datasets):
@@ -239,6 +239,24 @@ def save_junction(session, datasets):
     session.commit()
 
 
+def save_disconnector(session, datasets):
+
+    print('Disconnector')
+    disconnectors = []
+    for dataset in datasets[DATASET_TYPES.index('R')]['data'][1:]:
+        data = dataset.split(';')
+        disconnector = Disconnector(
+            id=data[3],
+            control_area=data[4].split(':', 1)[0],
+            name=data[5],
+            blk=data[6],
+            out=data[15])
+        disconnectors.append(disconnector)
+
+    session.add_all(disconnectors)
+    session.commit()
+
+
 def save_datasets(session, datasets):
 
     print('--- PNL dataset ---')
@@ -258,6 +276,7 @@ def save_datasets(session, datasets):
     save_track_section(session, datasets)
     save_signal(session, datasets)
     save_junction(session, datasets)
+    save_disconnector(session, datasets)
 
     # TODO: Blok A došetřit, zatím nedává smysl
     # Blok D je prázdný
@@ -380,21 +399,6 @@ def save_datasets(session, datasets):
         blezs.append(blez)
 
     session.add_all(blezs)
-    session.commit()
-
-    print('--- R dataset ---')
-    blrs = []
-    for dataset in datasets[DATASET_TYPES.index('R')]['data'][1:]:
-        data = dataset.split(';')
-        blr = BLR(
-            id=data[3],
-            control_area=data[4].split(':', 1)[0],
-            name=data[5],
-            blk=data[6],
-            out=data[15])
-        blrs.append(blr)
-
-    session.add_all(blrs)
     session.commit()
 
     print('--- P dataset ---')

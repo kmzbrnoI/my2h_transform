@@ -20,7 +20,7 @@ from sqlalchemy.orm import sessionmaker
 from utils import DATASET_TYPES, remove_file, load_datasets
 from dataset import save_datasets
 from storage import BASE
-from writer import write_track_section, write_signal, write_junction
+from writer import write_track_section, write_signal, write_junction, write_disconnector
 
 
 def main():
@@ -56,6 +56,7 @@ def main():
         write_track_section(session, config)
         write_signal(session, config)
         write_junction(session, config)
+        write_disconnector(session, config)
 
         with open('./output.ini', 'w') as configfile:
             config.write(configfile, space_around_delimiters=False)

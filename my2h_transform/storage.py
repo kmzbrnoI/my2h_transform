@@ -201,9 +201,9 @@ class BLEZ(BASE):
     blv = Column(String)
 
 
-class BLR(BASE):
+class Disconnector(BASE):
 
-    __tablename__ = 'blrs'
+    __tablename__ = 'disconnectors'
 
     id = Column(Integer, primary_key=True)
     control_area = Column(Integer, ForeignKey('control_areas.id'))
