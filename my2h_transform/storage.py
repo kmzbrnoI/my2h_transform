@@ -109,7 +109,7 @@ class Signal(BASE):
     skupina1 = Column(String)
     skupina2 = Column(String)
     skupina3 = Column(String)
-    trat1 = Column(String)
+    trat1 = Column(Integer, ForeignKey(Railway.id))
     trat2 = Column(String)
 
     def __str__(self) -> str:

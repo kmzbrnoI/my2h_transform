@@ -200,7 +200,7 @@ def save_signal(session, datasets):
             skupina1=None,
             skupina2=None,
             skupina3=None,
-            trat1=data[6],
+            trat1=data[6].split(':', 1)[0],
             trat2=data[7])
         signals.append(signal)
 
