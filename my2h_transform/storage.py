@@ -28,17 +28,26 @@ class Control_Area(BASE):
     name = Column(String)
 
 
-class BLT(BASE):
+class Railway(BASE):
 
-    __tablename__ = 'blts'
+    __tablename__ = 'railways'
 
     id = Column(Integer, primary_key=True)
-    group = Column(String)
-    label = Column(String)
-    label_text_part = Column(String)
-    gate_type = Column(String)
+    shortname = Column(String)
+    name = Column(String)
+    safeguard = Column(String)
+
+
+class Track_Section(BASE):
+
+    __tablename__ = 'track_sections'
+
+    id = Column(Integer, primary_key=True)
+    railway = Column(String, ForeignKey('railways.id'))
+    name = Column(String)
+    safeguard = Column(String)
     velocity = Column(Integer)
-    det1 = Column(String)
+    det1 = Column(String)  # tohle ukazuje do tabulky B
     det2 = Column(String)
     det3 = Column(String)
     det4 = Column(String)
@@ -62,22 +71,6 @@ class BLT(BASE):
     out3_S = Column(String)
     out4_S = Column(String)
     out5_S = Column(String)
-
-
-class BLW(BASE):
-
-    __tablename__ = 'blws'
-
-    id = Column(Integer, primary_key=True)
-    label = Column(String)
-    name = Column(String)
-    gate_type = Column(String)
-    conn_1 = Column(String)
-    conn_2 = Column(String)
-    conn_3 = Column(String)
-    conn_4 = Column(String)
-    conn_5 = Column(String)
-    conn_6 = Column(String)
 
 
 class BLH(BASE):

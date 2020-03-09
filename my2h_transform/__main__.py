@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker
 
 from utils import DATASET_TYPES, remove_file, load_datasets
 from dataset import save_datasets
-from storage import BASE, Control_Area
+from storage import BASE, Control_Area, Railway, Track_Section
 
 
 def main():
@@ -49,8 +49,19 @@ def main():
         session = SQLSession()
 
         print('Control Areas')
-        for area in session.query(Control_Area).order_by(Control_Area.name):
-            print('  {}\t{}'.format(area.id, area.name))
+        for item in session.query(Control_Area).order_by(Control_Area.name):
+            print('  {}\t{}'.format(item.id, item.name))
+
+        print('Railways')
+        for item in session.query(Railway).order_by(Railway.name):
+            print('  {}\t{}\t{}\t{}'.format(item.id, item.safeguard, item.shortname, item.name))
+
+        print('Track Sections')
+        for item, it in session.query(
+            Track_Section, Railway).filter(
+            Track_Section.railway == Railway.id).order_by(
+                Track_Section.name):
+            print('  {}\t{}\t{}\t{}'.format(item.id, item.name, it.shortname, item.det1))
 
 
 if __name__ == '__main__':

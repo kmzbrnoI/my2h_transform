@@ -3,24 +3,12 @@ Save datasets into database
 """
 
 from utils import DATASET_TYPES
-from storage import PNL, Control_Area, BLT, BLW, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
+from storage import PNL, Control_Area, Railway, Track_Section, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
 
 
-def save_datasets(session, datasets):
+def save_control_area(session, datasets):
 
-    print('--- PNL dataset ---')
-    pnls = []
-    for dataset in datasets[DATASET_TYPES.index('PNL')]['data'][2:]:
-        data = dataset.split(';')
-        pnl = PNL(
-            id=data[1],
-            name=data[2])
-        pnls.append(pnl)
-
-    session.add_all(pnls)
-    session.commit()
-
-    print('Control_Area')
+    print('Control Area')
     control_areas = []
     for dataset in datasets[DATASET_TYPES.index('OR')]['data'][1:]:
         data = dataset.split(';')
@@ -33,36 +21,35 @@ def save_datasets(session, datasets):
     session.add_all(control_areas)
     session.commit()
 
-    print('--- BL W dataset ---')
-    blws = []
+
+def save_railway(session, datasets):
+
+    print('Railway')
+    railways = []
     for dataset in datasets[DATASET_TYPES.index('W')]['data'][1:]:
         data = dataset.split(';')
-        blw = BLW(
+        railway = Railway(
             id=data[3],
-            label=data[4],
+            shortname=data[4],
             name=data[6],
-            gate_type=data[7],
-            conn_1=data[10],
-            conn_2=data[11],
-            conn_3=data[12],
-            conn_4=data[13],
-            conn_5=data[14],
-            conn_6=data[15] if data[3] == str(341) else None)
-        blws.append(blw)
+            safeguard=data[7])
+        railways.append(railway)
 
-    session.add_all(blws)
+    session.add_all(railways)
     session.commit()
 
-    print('--- BL T dataset ---')
-    blts = []
+
+def save_track_section(session, datasets):
+
+    print('Track Section')
+    track_sections = []
     for dataset in datasets[DATASET_TYPES.index('T')]['data'][1:]:
         data = dataset.split(';')
-        blt = BLT(
+        track_section = Track_Section(
             id=data[3],
-            group=data[4],
-            label=data[5],
-            label_text_part=data[6],
-            gate_type=data[7],
+            railway=data[4].split(':', 1)[0],
+            name=data[6],
+            safeguard=data[7],
             velocity=data[12],
             det1=data[15],
             det2=data[16],
@@ -88,10 +75,29 @@ def save_datasets(session, datasets):
             out3_S=data[36],
             out4_S=data[37],
             out5_S=data[38])
-        blts.append(blt)
+        track_sections.append(track_section)
 
-    session.add_all(blts)
+    session.add_all(track_sections)
     session.commit()
+
+
+def save_datasets(session, datasets):
+
+    print('--- PNL dataset ---')
+    pnls = []
+    for dataset in datasets[DATASET_TYPES.index('PNL')]['data'][2:]:
+        data = dataset.split(';')
+        pnl = PNL(
+            id=data[1],
+            name=data[2])
+        pnls.append(pnl)
+
+    session.add_all(pnls)
+    session.commit()
+
+    save_control_area(session, datasets)
+    save_railway(session, datasets)
+    save_track_section(session, datasets)
 
     print('--- H dataset ---')
     blhs = []
