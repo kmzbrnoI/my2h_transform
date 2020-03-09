@@ -3,7 +3,7 @@ Save datasets into database
 """
 
 from utils import DATASET_TYPES
-from storage import PNL, Control_Area, Railway, Track_Section, BLH, BLB, BLC, BLE, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
+from storage import PNL, Control_Area, Railway, Track_Section, Signal, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
 
 
 def save_control_area(session, datasets):
@@ -81,6 +81,133 @@ def save_track_section(session, datasets):
     session.commit()
 
 
+def save_signal(session, datasets):
+
+    signals = []
+    print('Signal from H')
+    for dataset in datasets[DATASET_TYPES.index('H')]['data'][1:]:
+        data = dataset.split(';')
+        signal = Signal(
+            id=data[3],
+            signal_type='hlavni',
+            control_area=data[4].split(':', 1)[0],
+            name=data[5],
+            shunt=data[6],
+            direction=data[8],
+            skupinNv=data[9],
+            pst1=data[11],
+            pst2=data[12],
+            typ=data[13],
+            hw=data[14],
+            out1=data[15],
+            out2=data[16],
+            out3=data[17],
+            out4=data[18],
+            out5=data[19],
+            usek1=data[21],
+            usek2=data[22],
+            blokUV=data[23],
+            skupina1=None,
+            skupina2=None,
+            skupina3=None,
+            trat1=None,
+            trat2=None)
+        signals.append(signal)
+
+    print('Signal from B')
+    for dataset in datasets[DATASET_TYPES.index('B')]['data'][1:]:
+        data = dataset.split(';')
+        signal = Signal(
+            id=data[3],
+            signal_type='seradovaci',
+            control_area=data[4].split(':', 1)[0],
+            name=data[5],
+            shunt=None,
+            direction=data[8],
+            skupinNv=data[9],
+            pst1=data[11],
+            pst2=data[12],
+            typ=data[13],
+            hw=data[14],
+            out1=data[15],
+            out2=data[16],
+            out3=data[17],
+            out4=data[18],
+            out5=data[19],
+            usek1=data[21],
+            usek2=data[22],
+            blokUV=None,
+            skupina1=None,
+            skupina2=None,
+            skupina3=None,
+            trat1=None,
+            trat2=None)
+        signals.append(signal)
+
+    print('Signal from C')
+    for dataset in datasets[DATASET_TYPES.index('C')]['data'][1:]:
+        data = dataset.split(';')
+        signal = Signal(
+            id=data[3],
+            signal_type='skupinove',
+            control_area=data[4].split(':', 1)[0],
+            name=data[5],
+            shunt=None,
+            direction=None,
+            skupinNv=None,
+            pst1=None,
+            pst2=None,
+            typ=data[13],
+            hw=data[14],
+            out1=data[15],
+            out2=data[16],
+            out3=data[17],
+            out4=data[18],
+            out5=data[19],
+            usek1=None,
+            usek2=None,
+            blokUV=None,
+            skupina1=data[24] if data[3] == str(329) else None,
+            skupina2=data[25] if data[3] == str(329) else None,
+            skupina3=data[26] if data[3] == str(329) else None,
+            trat1=None,
+            trat2=None)
+        signals.append(signal)
+
+    print('Signal from E')
+    for dataset in datasets[DATASET_TYPES.index('E')]['data'][1:]:
+        data = dataset.split(';')
+        signal = Signal(
+            id=data[3],
+            signal_type='autoblok',
+            control_area=None,
+            name=data[5],
+            shunt=None,
+            direction=data[8],
+            skupinNv=None,
+            pst1=None,
+            pst2=None,
+            typ=data[13],
+            hw=data[14],
+            out1=data[15],
+            out2=data[16],
+            out3=data[17],
+            out4=data[18],
+            out5=data[19],
+            usek1=None,
+            usek2=None,
+            blokUV=None,
+            skupina1=None,
+            skupina2=None,
+            skupina3=None,
+            trat1=data[6],
+            trat2=data[7])
+        signals.append(signal)
+
+    session.add_all(signals)
+    session.commit()
+
+
 def save_datasets(session, datasets):
 
     print('--- PNL dataset ---')
@@ -98,108 +225,10 @@ def save_datasets(session, datasets):
     save_control_area(session, datasets)
     save_railway(session, datasets)
     save_track_section(session, datasets)
-
-    print('--- H dataset ---')
-    blhs = []
-    for dataset in datasets[DATASET_TYPES.index('H')]['data'][1:]:
-        data = dataset.split(';')
-        blh = BLH(
-            id=data[3],
-            control_area=data[4].split(':', 1)[0],
-            name=data[5],
-            posun=data[6],
-            direction=data[8],
-            skupinNv=data[9],
-            pst1=data[11],
-            pst2=data[12],
-            typ=data[13],
-            hw=data[14],
-            out1=data[15],
-            out2=data[16],
-            out3=data[17],
-            out4=data[18],
-            out5=data[19],
-            usek1=data[21],
-            usek2=data[22],
-            blokUV=data[23])
-        blhs.append(blh)
-
-    session.add_all(blhs)
-    session.commit()
-
-    print('--- B dataset ---')
-    blbs = []
-    for dataset in datasets[DATASET_TYPES.index('B')]['data'][1:]:
-        data = dataset.split(';')
-        blb = BLB(
-            id=data[3],
-            control_area=data[4].split(':', 1)[0],
-            name=data[5],
-            direction=data[8],
-            skupinNv=data[9],
-            pst1=data[11],
-            pst2=data[12],
-            typ=data[13],
-            hw=data[14],
-            out1=data[15],
-            out2=data[16],
-            out3=data[17],
-            out4=data[18],
-            out5=data[19],
-            usek1=data[21],
-            usek2=data[22])
-        blbs.append(blb)
-
-    session.add_all(blbs)
-    session.commit()
-
-    print('--- C dataset ---')
-    blcs = []
-    for dataset in datasets[DATASET_TYPES.index('C')]['data'][1:]:
-        data = dataset.split(';')
-        blc = BLC(
-            id=data[3],
-            control_area=data[4].split(':', 1)[0],
-            name=data[5],
-            typ=data[13],
-            hw=data[14],
-            out1=data[15],
-            out2=data[16],
-            out3=data[17],
-            out4=data[18],
-            out5=data[19],
-            skupina1=data[24] if data[3] == str(329) else None,
-            skupina2=data[25] if data[3] == str(329) else None,
-            skupina3=data[26] if data[3] == str(329) else None)
-        blcs.append(blc)
-
-    session.add_all(blcs)
-    session.commit()
+    save_signal(session, datasets)
 
     # TODO: Blok A došetřit, zatím nedává smysl
     # Blok D je prázdný
-
-    print('--- E dataset ---')
-    bles = []
-    for dataset in datasets[DATASET_TYPES.index('E')]['data'][1:]:
-        data = dataset.split(';')
-        ble = BLE(
-            id=data[3],
-            name=data[5],
-            trat1=data[6],
-            trat2=data[7],
-            direction=data[8],
-            typ=data[13],
-            hw=data[14],
-            out1=data[15],
-            out2=data[16],
-            out3=data[17],
-            out4=data[18],
-            out5=data[19])
-        bles.append(ble)
-
-    session.add_all(bles)
-    session.commit()
 
     print('--- V dataset ---')
     blvs = []
@@ -295,7 +324,7 @@ def save_datasets(session, datasets):
             in2L=data[22],
             in1S=data[23],
             in2S=data[24])
-        blms.append(blk)
+        blks.append(blk)
 
     session.add_all(blks)
     session.commit()

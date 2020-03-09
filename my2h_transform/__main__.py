@@ -12,13 +12,14 @@ Options:
 
 import os
 import json
+import configparser
 from docopt import docopt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from utils import DATASET_TYPES, remove_file, load_datasets
 from dataset import save_datasets
-from storage import BASE, Control_Area, Railway, Track_Section
+from storage import BASE, Control_Area, Railway, Track_Section, Signal
 
 
 def main():
@@ -48,20 +49,20 @@ def main():
         SQLSession = sessionmaker(bind=SQLEngine)
         session = SQLSession()
 
-        print('Control Areas')
-        for item in session.query(Control_Area).order_by(Control_Area.name):
-            print('  {}\t{}'.format(item.id, item.name))
-
-        print('Railways')
-        for item in session.query(Railway).order_by(Railway.name):
-            print('  {}\t{}\t{}\t{}'.format(item.id, item.safeguard, item.shortname, item.name))
-
-        print('Track Sections')
-        for item, it in session.query(
+        config = configparser.ConfigParser()
+        # Track Sections
+        for section, railway in session.query(
             Track_Section, Railway).filter(
             Track_Section.railway == Railway.id).order_by(
-                Track_Section.name):
-            print('  {}\t{}\t{}\t{}'.format(item.id, item.name, it.shortname, item.det1))
+                Track_Section.id):
+            config[section.id] = {
+                'nazev': '{} {}'.format(railway.shortname, section.name),
+                'typ': 1,
+            }
+
+        with open('./output.ini', 'w') as configfile:
+            config.write(configfile, space_around_delimiters=False)
+
 
 
 if __name__ == '__main__':

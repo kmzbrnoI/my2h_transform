@@ -73,14 +73,15 @@ class Track_Section(BASE):
     out5_S = Column(String)
 
 
-class BLH(BASE):
+class Signal(BASE):
 
-    __tablename__ = 'blhs'
+    __tablename__ = 'signals'
 
     id = Column(Integer, primary_key=True)
+    signal_type = Column(String)
     control_area = Column(Integer, ForeignKey('control_areas.id'))
     name = Column(String)
-    posun = Column(Integer)
+    shunt = Column(Integer)
     direction = Column(Integer)
     skupinNv = Column(String)
     pst1 = Column(String)
@@ -95,65 +96,11 @@ class BLH(BASE):
     usek1 = Column(String)
     usek2 = Column(String)
     blokUV = Column(String)
-
-
-class BLB(BASE):
-
-    __tablename__ = 'blbs'
-
-    id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
-    name = Column(String)
-    direction = Column(Integer)
-    skupinNv = Column(String)
-    pst1 = Column(String)
-    pst2 = Column(String)
-    typ = Column(Integer)
-    hw = Column(Integer)
-    out1 = Column(String)
-    out2 = Column(String)
-    out3 = Column(String)
-    out4 = Column(String)
-    out5 = Column(String)
-    usek1 = Column(String)
-    usek2 = Column(String)
-
-
-class BLC(BASE):
-
-    __tablename__ = 'blcs'
-
-    id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
-    name = Column(String)
-    typ = Column(Integer)
-    hw = Column(Integer)
-    out1 = Column(String)
-    out2 = Column(String)
-    out3 = Column(String)
-    out4 = Column(String)
-    out5 = Column(String)
     skupina1 = Column(String)
     skupina2 = Column(String)
     skupina3 = Column(String)
-
-
-class BLE(BASE):
-
-    __tablename__ = 'bles'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
     trat1 = Column(String)
     trat2 = Column(String)
-    direction = Column(Integer)
-    typ = Column(Integer)
-    hw = Column(Integer)
-    out1 = Column(String)
-    out2 = Column(String)
-    out3 = Column(String)
-    out4 = Column(String)
-    out5 = Column(String)
 
 
 class BLV(BASE):
