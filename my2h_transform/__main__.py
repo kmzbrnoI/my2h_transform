@@ -76,8 +76,9 @@ def main():
 
         all_blocks_ = all_blocks(session)
         for old_id, new_id in sorted(map_.items(), key=lambda kv: kv[1]):
-            if all_blocks_[old_id].control_area == 1:
+            if new_id >= 100000:
                 print(new_id, all_blocks_[old_id].name)
+
 
 if __name__ == '__main__':
     main()
