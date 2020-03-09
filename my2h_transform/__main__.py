@@ -95,6 +95,8 @@ def main():
                 data['RCSb3'] = RCSb3
                 data['RCSp3'] = RCSp3
 
+            data['zesil'] = section.boost
+
             config[section.id] = data
 
         with open('./output.ini', 'w') as configfile:
