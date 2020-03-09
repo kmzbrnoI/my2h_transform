@@ -24,7 +24,7 @@ from storage import BASE, Control_Area
 def main():
     '''Entry point'''
 
-    args = docopt(__doc__, version='0.0.1')  # pylint: disable=unused-variable
+    args = docopt(__doc__, version='0.0.1')
 
     if args['load_blocks']:
 
