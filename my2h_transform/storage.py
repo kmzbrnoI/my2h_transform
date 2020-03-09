@@ -27,6 +27,11 @@ class Control_Area(BASE):
     shortname = Column(String)
     name = Column(String)
 
+    def __str__(self) -> str:
+        return self.shortname
+
+    __repr__ = __str__
+
 
 class Railway(BASE):
 
@@ -125,6 +130,11 @@ class Junction(BASE):
     inB1 = Column(String)
     inB2 = Column(String)
     zdroj = Column(String)
+
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
 
 
 class BLM(BASE):
