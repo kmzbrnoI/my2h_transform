@@ -84,7 +84,7 @@ class Signal(BASE):
 
     id = Column(Integer, primary_key=True)
     signal_type = Column(String)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     shunt = Column(Integer)
     direction = Column(Integer)
@@ -113,7 +113,7 @@ class Junction(BASE):
     __tablename__ = 'junctions'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     blok_s1 = Column(String)
     blok_s2 = Column(String)
