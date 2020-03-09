@@ -34,3 +34,4 @@ MyJOP To hJOP Transform Utility
 
 - [regular expression](https://regexr.com/)
 - [sqlalchemy](https://docs.sqlalchemy.org/en/13/)
+- [Vocabulary](https://www.fd.cvut.cz/personal/tyfal/str/slovnik/a-c-a.pdf)
