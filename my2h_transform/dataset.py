@@ -3,7 +3,7 @@ Save datasets into database
 """
 
 from utils import DATASET_TYPES
-from storage import PNL, Control_Area, Railway, Track_Section, Signal, BLV, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
+from storage import PNL, Control_Area, Railway, Track_Section, Signal, Junction, BLM, BLK, BLUV, BLQ, BLEZ, BLR, BLP
 
 
 def save_control_area(session, datasets):
@@ -208,33 +208,13 @@ def save_signal(session, datasets):
     session.commit()
 
 
-def save_datasets(session, datasets):
+def save_junction(session, datasets):
 
-    print('--- PNL dataset ---')
-    pnls = []
-    for dataset in datasets[DATASET_TYPES.index('PNL')]['data'][2:]:
-        data = dataset.split(';')
-        pnl = PNL(
-            id=data[1],
-            name=data[2])
-        pnls.append(pnl)
-
-    session.add_all(pnls)
-    session.commit()
-
-    save_control_area(session, datasets)
-    save_railway(session, datasets)
-    save_track_section(session, datasets)
-    save_signal(session, datasets)
-
-    # TODO: Blok A došetřit, zatím nedává smysl
-    # Blok D je prázdný
-
-    print('--- V dataset ---')
-    blvs = []
+    print('Junction')
+    junctions = []
     for dataset in datasets[DATASET_TYPES.index('V')]['data'][1:]:
         data = dataset.split(';')
-        blv = BLV(
+        junction = Junction(
             id=data[3],
             control_area=data[4].split(':', 1)[0],
             name=data[5],
@@ -253,10 +233,34 @@ def save_datasets(session, datasets):
             inB1=data[21],
             inB2=data[22],
             zdroj=data[23])
-        blvs.append(blv)
+        junctions.append(junction)
 
-    session.add_all(blvs)
+    session.add_all(junctions)
     session.commit()
+
+
+def save_datasets(session, datasets):
+
+    print('--- PNL dataset ---')
+    pnls = []
+    for dataset in datasets[DATASET_TYPES.index('PNL')]['data'][2:]:
+        data = dataset.split(';')
+        pnl = PNL(
+            id=data[1],
+            name=data[2])
+        pnls.append(pnl)
+
+    session.add_all(pnls)
+    session.commit()
+
+    save_control_area(session, datasets)
+    save_railway(session, datasets)
+    save_track_section(session, datasets)
+    save_signal(session, datasets)
+    save_junction(session, datasets)
+
+    # TODO: Blok A došetřit, zatím nedává smysl
+    # Blok D je prázdný
 
     print('--- M dataset ---')
     blms = []

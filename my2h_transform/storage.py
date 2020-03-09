@@ -103,9 +103,9 @@ class Signal(BASE):
     trat2 = Column(String)
 
 
-class BLV(BASE):
+class Junction(BASE):
 
-    __tablename__ = 'blvs'
+    __tablename__ = 'junctions'
 
     id = Column(Integer, primary_key=True)
     control_area = Column(Integer, ForeignKey('control_areas.id'))

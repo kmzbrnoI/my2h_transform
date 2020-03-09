@@ -1,4 +1,4 @@
-from storage import Control_Area, Railway, Track_Section, Signal
+from storage import Control_Area, Railway, Track_Section, Signal, Junction
 
 
 def write_track_section(session, config):
@@ -57,7 +57,7 @@ def write_signal(session, config):
             Signal, Control_Area).filter(Signal.control_area == Control_Area.id).order_by(Signal.id):
 
         data = {
-            'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0], signal.name),
+            'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0].capitalize(), signal.name),
             'typ': 3,
         }
 
@@ -98,3 +98,43 @@ def write_signal(session, config):
             data['OutType'] = 0
 
         config[signal.id] = data
+
+
+def write_junction(session, config):
+
+    for junction, area in session.query(
+            Junction, Control_Area).filter(Junction.control_area == Control_Area.id).order_by(Junction.id):
+
+        data = {
+            'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0].capitalize(), junction.name),
+            'typ': 0,
+        }
+
+        RCSb0 = int(junction.in1.split(':', 1)[0])
+        RCSp0 = int(junction.in1.split(':', 1)[1])
+        RCSb1 = int(junction.in2.split(':', 1)[0])
+        RCSp1 = int(junction.in2.split(':', 1)[1])
+        RCSb2 = int(junction.out1.split(':', 1)[0])
+        RCSp2 = int(junction.out1.split(':', 1)[1])
+        RCSb3 = int(junction.out2.split(':', 1)[0])
+        RCSp3 = int(junction.out2.split(':', 1)[1])
+
+        data['RCScnt'] = 4 if junction.hw else 0
+
+        if RCSb0 != 0:
+            data['RCSb0'] = RCSb0
+            data['RCSp0'] = RCSp0
+
+        if RCSb1 != 0:
+            data['RCSb1'] = RCSb1
+            data['RCSp1'] = RCSp1
+
+        if RCSb2 != 0:
+            data['RCSb2'] = RCSb2
+            data['RCSp2'] = RCSp2
+
+        if RCSb3 != 0:
+            data['RCSb3'] = RCSb3
+            data['RCSp3'] = RCSp3
+
+        config[junction.id] = data
