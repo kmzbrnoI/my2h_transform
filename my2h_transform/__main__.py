@@ -2,6 +2,7 @@
 Usage:
   my2h_transform.py load_blocks <myjop_blk_file> <output_db_file>
   my2h_transform.py show_blocks <source_db_file>
+  my2h_transform.py reid <source_db_file>
   my2h_transform.py (-h | --help)
   my2h_transform.py --version
 
@@ -21,6 +22,7 @@ from utils import DATASET_TYPES, remove_file, load_datasets
 from dataset import save_datasets
 from storage import BASE
 from writer import write_track_section, write_signal, write_junction, write_disconnector
+from reid import ids_old_to_new
 
 
 def main():
@@ -61,6 +63,18 @@ def main():
         with open('./output.ini', 'w') as configfile:
             config.write(configfile, space_around_delimiters=False)
 
+    if args['reid']:
+
+        source_file = os.path.abspath(args['<source_db_file>'])
+
+        SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
+        BASE.metadata.create_all(SQLEngine)
+        SQLSession = sessionmaker(bind=SQLEngine)
+        session = SQLSession()
+
+        map_ = ids_old_to_new(session)
+        for key, val in map_:
+            print(key, val)
 
 if __name__ == '__main__':
     main()
