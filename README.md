@@ -10,6 +10,18 @@ MyJOP To hJOP Transform Utility
     python my2h_transform
 
 
+## Real usage
+
+    # Load blocks from myJOP and create blk.db file
+    python my2h_transform load_blocks zadani/bloky.blk ./blk.db
+    # Create reid_map.csv for blk.db file.
+    python my2h_transform reid ./blk.db ./reid_map.csv
+    # Transfrom blk.db by reid_map.csv to new_blk.db
+    python my2h_transform remap_by_reid ./blk.db ./reid_map.csv ./new_blk.db
+    # Create .ini file for hJOP from new_blk.db
+    python my2h_transform create_ini ./new_blk.db ./blk.ini
+
+
 ## Development & Contributions
 
 ### Setup development environment on Linux
