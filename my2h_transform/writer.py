@@ -50,9 +50,6 @@ def prepare_data_for_section(section, parent, capitalize=True, track=False):
     # TODO: delka neni nactena z dat
     data['delka'] = 100
 
-    if track:
-        data['rychlost'] = section.velocity
-
     booster = int(section.boost)
     if booster != 0:
         data['zesil'] = BOOSTER_REMAP[int(section.boost)]
@@ -61,6 +58,9 @@ def prepare_data_for_section(section, parent, capitalize=True, track=False):
     else:
         assert section.id in BOOSTER_FROM_BLOCK_ID, f'Block {section.id} missing from BOOSTER_FROM_BLOCK_ID!'
         data['zesil'] = BOOSTER_FROM_BLOCK_ID[section.id]
+
+    if track:
+        data['rychlost'] = section.velocity
 
     return data
 
