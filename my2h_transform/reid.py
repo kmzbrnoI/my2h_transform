@@ -33,7 +33,7 @@ def _blocks_old_to_new(blocks: Iterable[Any], start: int, limit: int) -> Dict[in
 
     for area_id, count in count_per_area.items():
         assert count < limit, f'Count in area {area_id} overflow!'
-        if count > limit-10:
+        if count > limit - 10:
             print(f'WARN: in area {area_id} less than 10 free IDs left!')
 
     return remap
@@ -85,7 +85,6 @@ def ids_old_to_new(session) -> Dict[int, int]:
         _blocks(session, Disconnector), start=500, limit=100,
     ))
 
-
     TRAT_HARD_ORDER = [
         343, 344,  # Sk-hr
         339, 340,  # Hr-Sk
@@ -103,7 +102,7 @@ def ids_old_to_new(session) -> Dict[int, int]:
 
     i = 0
     for trat in TRAT_HARD_ORDER:
-        trat_id = 100000 + i*100
+        trat_id = 100000 + i * 100
         remap[trat] = trat_id
 
         railways = session.query(Track_Section).filter(Track_Section.railway == trat).\
