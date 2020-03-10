@@ -130,5 +130,6 @@ dmypy.json
 
 # Added by celestian
 zadani/
-blk.db
-output.ini
+*.db
+*.ini
+*.csv
