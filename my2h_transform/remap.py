@@ -59,14 +59,10 @@ def remap_blk(reid, source_session, output_session):
 def remap_signal(reid, source_session, output_session):
 
     for item in source_session.query(Signal).all():
-
-        print(str(item.id))
-        print(reid[str(item.id)])
-
         source_session.expunge(item)
         make_transient(item)
         item.id = reid[str(item.id)]
-        item.railway = reid[str(item.control_area)]
+        item.railway = reid[str(item.control_area)] if item.control_area else None
         item.trat1 = reid[str(item.trat1)] if item.trat1 else None
         output_session.add(item)
         output_session.commit()
