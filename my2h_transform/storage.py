@@ -3,7 +3,7 @@ Database handler
 """
 
 from sqlalchemy import ForeignKey
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 #from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -140,6 +140,7 @@ class Junction(BASE):
     inB1 = Column(String)
     inB2 = Column(String)
     zdroj = Column(String)
+    second_ref = Column(Integer, default=0)
 
     def __str__(self) -> str:
         return f'{self.control_area}: {self.name}'

@@ -4,6 +4,7 @@ Save datasets into database
 
 from utils import DATASET_TYPES
 from storage import PNL, Control_Area, Railway, Track_Section, Signal, Junction, Disconnector, BLM, BLK, BLUV, BLQ, BLEZ, BLP
+from copy import deepcopy
 
 
 def save_control_area(session, datasets):
@@ -214,8 +215,9 @@ def save_junction(session, datasets):
     junctions = []
     for dataset in datasets[DATASET_TYPES.index('V')]['data'][1:]:
         data = dataset.split(';')
+        name = data[5]
         junction = Junction(
-            id=data[3],
+            id=int(data[3])*2,
             control_area=data[4].split(':', 1)[0],
             name=data[5],
             blok_s1=data[6],
@@ -233,6 +235,18 @@ def save_junction(session, datasets):
             inB1=data[21],
             inB2=data[22],
             zdroj=data[23])
+
+        if '/' in name:
+            # double junction -> split
+            first, second = name.split('/')
+            junction.name = min(first, second)
+            junction.second_ref = junction.id + 1
+            junctions.append(deepcopy(junction))
+
+            junction.name = max(first, second)
+            junction.second_ref = junction.id
+            junction.id = junction.id + 1
+
         junctions.append(junction)
 
     session.add_all(junctions)
