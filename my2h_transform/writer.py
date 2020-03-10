@@ -1,4 +1,5 @@
 from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector
+from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
 
 
 def prepare_data_for_section(section, parent, capitalize=True):
@@ -48,7 +49,15 @@ def prepare_data_for_section(section, parent, capitalize=True):
 
     # TODO: delka neni nactena z dat
     data['delka'] = 100
-    data['zesil'] = section.boost
+
+    booster = int(section.boost)
+    if booster != 0:
+        data['zesil'] = BOOSTER_REMAP[int(section.boost)]
+    elif section.control_area in BOOSTER_FROM_CONTROL_AREA:
+        data['zesil'] = BOOSTER_FROM_CONTROL_AREA[section.control_area]
+    else:
+        assert section.id in BOOSTER_FROM_BLOCK_ID, f'Block {section.id} missing from BOOSTER_FROM_BLOCK_ID!'
+        data['zesil'] = BOOSTER_FROM_BLOCK_ID[section.id]
 
     return data
 
