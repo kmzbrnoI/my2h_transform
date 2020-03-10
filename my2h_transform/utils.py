@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Any
 
-from storage import Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section
+from storage import Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area
 
 
 DATASET_TYPES = ['PNL', 'OR', 'OPM', 'OPD', 'L', 'W', 'T', 'H', 'B', 'C', 'A', 'D', 'E', 'V', 'M', 'S', 'K', 'UV', 'Q',
@@ -39,6 +39,6 @@ def load_datasets(fname):
 
 def all_blocks(session) -> Dict[str, Any]:
     result = {}
-    for type_ in [Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section]:
+    for type_ in [Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area]:
         result.update({block.id: block for block in session.query(type_).all()})
     return result

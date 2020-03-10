@@ -1,4 +1,4 @@
-from storage import Track_Section, Signal, Junction, Disconnector, BLK, BLM
+from storage import Track_Section, Signal, Junction, Disconnector, BLK, BLM, Control_Area
 from typing import Dict, List, Any, Iterable
 
 
@@ -116,5 +116,10 @@ def ids_old_to_new(session) -> Dict[int, int]:
             remap[signal.id] = trat_id + 50 + j
 
         i += 1
+
+    # areas temporary reid to 1-100 (this will never be used in hJOP)
+    areas = session.query(Control_Area).order_by(Control_Area.id).all()
+    for i, area in enumerate(areas):
+        remap[area.id] = i+1
 
     return remap
