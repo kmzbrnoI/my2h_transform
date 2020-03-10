@@ -50,6 +50,9 @@ def prepare_data_for_section(section, parent, capitalize=True, track=False):
     # TODO: delka neni nactena z dat
     data['delka'] = 100
 
+    if track:
+        data['rychlost'] = section.velocity
+
     booster = int(section.boost)
     if booster != 0:
         data['zesil'] = BOOSTER_REMAP[int(section.boost)]
