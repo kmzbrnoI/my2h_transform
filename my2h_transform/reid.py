@@ -120,6 +120,6 @@ def ids_old_to_new(session) -> Dict[int, int]:
     # areas temporary reid to 1-100 (this will never be used in hJOP)
     areas = session.query(Control_Area).order_by(Control_Area.id).all()
     for i, area in enumerate(areas):
-        remap[area.id] = i+1
+        remap[area.id] = i + 1
 
     return remap

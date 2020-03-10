@@ -1,8 +1,8 @@
 import os
+import logging
 from typing import Dict, Any
 
 from storage import Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area
-
 
 DATASET_TYPES = ['PNL', 'OR', 'OPM', 'OPD', 'L', 'W', 'T', 'H', 'B', 'C', 'A', 'D', 'E', 'V', 'M', 'S', 'K', 'UV', 'Q',
                  'PST', 'EZ', 'N', 'R', 'P']
@@ -13,7 +13,7 @@ def remove_file(fname):
 
     if os.path.exists(fname):
         os.remove(fname)
-        print('# File [{}] was removed.'.format(fname))
+        logging.info('Old output file [{}] was removed.'.format(fname))
 
 
 def load_datasets(fname):
@@ -33,6 +33,8 @@ def load_datasets(fname):
                 type_number = type_number + 1
             else:
                 dataset.append(line.strip('\n'))
+
+    logging.info('Datasets loaded from file [{}].'.format(fname))
 
     return datasets
 

@@ -13,6 +13,7 @@ Options:
 """
 
 import os
+import logging
 import csv
 import json
 import configparser
@@ -36,6 +37,7 @@ def main():
     if args['load_blocks']:
 
         output_file = os.path.abspath(args['<output_db_file>'])
+
         remove_file(output_file)
 
         SQLEngine = create_engine('sqlite:///{}'.format(output_file), echo=False)
@@ -46,10 +48,14 @@ def main():
         datasets = load_datasets(args['<myjop_blk_file>'])
         save_datasets(session, datasets)
 
+        logging.info('Blocks succesfully saved in file [{}].'.format(output_file))
+
     if args['reid']:
 
         source_file = os.path.abspath(args['<source_db_file>'])
         output_file = os.path.abspath(args['<output_reid_csv>'])
+
+        remove_file(output_file)
 
         SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
         # BASE.metadata.create_all(SQLEngine)
@@ -73,11 +79,15 @@ def main():
             writer.writeheader()
             writer.writerows(data)
 
+        logging.info('reid_map succesfully saved in file [{}].'.format(output_file))
+
     if args['remap_by_reid']:
 
         source_file = os.path.abspath(args['<source_db_file>'])
         reid_file = os.path.abspath(args['<reid_csv>'])
         output_file = os.path.abspath(args['<output_db_file>'])
+
+        remove_file(output_file)
 
         Source_SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
         # BASE.metadata.create_all(Source_SQLEngine)
@@ -110,10 +120,14 @@ def main():
 #        blqs
 #        bluvs
 
+        logging.info('Remapped data succesfully saved in file [{}].'.format(output_file))
+
     if args['create_ini']:
 
         source_file = os.path.abspath(args['<source_db_file>'])
         output_file = os.path.abspath(args['<output_ini_file>'])
+
+        remove_file(output_file)
 
         SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
         # BASE.metadata.create_all(SQLEngine)
@@ -132,6 +146,9 @@ def main():
         with open(output_file, 'w') as configfile:
             config.write(configfile, space_around_delimiters=False)
 
+        logging.info('hJOP configuration data succesfully saved in file [{}].'.format(output_file))
+
 
 if __name__ == '__main__':
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
     main()
