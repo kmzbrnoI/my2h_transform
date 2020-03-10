@@ -48,7 +48,7 @@ class Track_Section(BASE):
     __tablename__ = 'track_sections'
 
     id = Column(Integer, primary_key=True)
-    railway = Column(String, ForeignKey('railways.id'))
+    railway = Column(String, ForeignKey(Railway.id))
     name = Column(String)
     safeguard = Column(String)
     velocity = Column(Integer)
@@ -152,7 +152,7 @@ class BLM(BASE):
     __tablename__ = 'blms'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     pst1 = Column(String)
     pst2 = Column(String)
@@ -170,7 +170,7 @@ class BLK(BASE):
     __tablename__ = 'blks'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     pst1 = Column(String)
     pst2 = Column(String)
@@ -192,7 +192,7 @@ class BLUV(BASE):
     __tablename__ = 'bluvs'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     direction = Column(Integer)
     souhlas = Column(Integer)
@@ -205,7 +205,7 @@ class BLQ(BASE):
     __tablename__ = 'blqs'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     bluv = Column(String)
     pocetID = Column(Integer)
@@ -216,7 +216,7 @@ class BLEZ(BASE):
     __tablename__ = 'blezs'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     blv = Column(String)
 
@@ -226,7 +226,7 @@ class Disconnector(BASE):
     __tablename__ = 'disconnectors'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     blk = Column(String)
     out = Column(String)
@@ -237,7 +237,7 @@ class BLP(BASE):
     __tablename__ = 'blps'
 
     id = Column(Integer, primary_key=True)
-    control_area = Column(Integer, ForeignKey('control_areas.id'))
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
     name = Column(String)
     typ = Column(String)
     inUzav = Column(String)
