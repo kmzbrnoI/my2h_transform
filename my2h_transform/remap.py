@@ -40,7 +40,7 @@ def remap_blm(reid, source_session, output_session):
         source_session.expunge(item)
         make_transient(item)
         item.id = reid[str(item.id)]
-        item.railway = reid[str(item.control_area)]
+        item.control_area = reid[str(item.control_area)]
         output_session.add(item)
         output_session.commit()
 
@@ -51,7 +51,7 @@ def remap_blk(reid, source_session, output_session):
         source_session.expunge(item)
         make_transient(item)
         item.id = reid[str(item.id)]
-        item.railway = reid[str(item.control_area)]
+        item.control_area = reid[str(item.control_area)]
         output_session.add(item)
         output_session.commit()
 
@@ -62,7 +62,7 @@ def remap_signal(reid, source_session, output_session):
         source_session.expunge(item)
         make_transient(item)
         item.id = reid[str(item.id)]
-        item.railway = reid[str(item.control_area)] if item.control_area else None
+        item.control_area = reid[str(item.control_area)] if item.control_area else None
         item.trat1 = reid[str(item.trat1)] if item.trat1 else None
         output_session.add(item)
         output_session.commit()
@@ -74,7 +74,7 @@ def remap_junction(reid, source_session, output_session):
         source_session.expunge(item)
         make_transient(item)
         item.id = reid[str(item.id)]
-        item.railway = reid[str(item.control_area)]
+        item.control_area = reid[str(item.control_area)]
         output_session.add(item)
         output_session.commit()
 
@@ -85,6 +85,6 @@ def remap_disconnector(reid, source_session, output_session):
         source_session.expunge(item)
         make_transient(item)
         item.id = reid[str(item.id)]
-        item.railway = reid[str(item.control_area)]
+        item.control_area = reid[str(item.control_area)]
         output_session.add(item)
         output_session.commit()
