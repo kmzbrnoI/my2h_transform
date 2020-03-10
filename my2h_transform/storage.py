@@ -164,6 +164,11 @@ class BLM(BASE):
     boost = Column(String)
     power_source = Column(String)
 
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
+
 
 class BLK(BASE):
 
@@ -186,6 +191,11 @@ class BLK(BASE):
     in1S = Column(String)
     in2S = Column(String)
 
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
+
 
 class BLUV(BASE):
 
@@ -199,6 +209,11 @@ class BLUV(BASE):
     nvID = Column(String)
     pocetID = Column(Integer)
 
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
+
 
 class BLQ(BASE):
 
@@ -209,6 +224,11 @@ class BLQ(BASE):
     name = Column(String)
     bluv = Column(String)
     pocetID = Column(Integer)
+
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
 
 
 class BLEZ(BASE):
@@ -231,6 +251,11 @@ class Disconnector(BASE):
     blk = Column(String)
     out = Column(String)
 
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
+
 
 class BLP(BASE):
 
@@ -247,3 +272,8 @@ class BLP(BASE):
     outUzav = Column(String)
     outNouzOtev = Column(String)
     outBlokPoz = Column(String)
+
+    def __str__(self) -> str:
+        return f'{self.control_area}: {self.name}'
+
+    __repr__ = __str__
