@@ -194,6 +194,9 @@ def write_junction(session):
             data['RCSb3'] = RCSb3
             data['RCSp3'] = RCSp3
 
+        if junction.second_ref != 0:
+            data['spojka'] = junction.second_ref
+
         blocks.append({
             'id': junction.id,
             'data': data,
