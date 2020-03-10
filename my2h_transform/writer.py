@@ -56,7 +56,7 @@ def prepare_data_for_section(section, parent, capitalize=True):
 def write_track_section(session, config):
 
     for section, railway in session.query(
-            Track_Section, Railway).filter(Track_Section.railway == Railway.id).order_by(Track_Section.id):
+            Track_Section, Railway).filter(Track_Section.railway == Railway.id).order_by(Track_Section.id).all():
 
         config[section.id] = prepare_data_for_section(section, railway, capitalize=False)
 
@@ -65,13 +65,13 @@ def write_section(session, config):
 
     # BLM (also with BLS dataset)
     for section, area in session.query(
-            BLM, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id):
+            BLM, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id).all():
 
         config[section.id] = prepare_data_for_section(section, area)
 
     # BLK
     for section, area in session.query(
-            BLK, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id):
+            BLK, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id).all():
 
         config[section.id] = prepare_data_for_section(section, area)
 
@@ -79,7 +79,7 @@ def write_section(session, config):
 def write_signal(session, config):
 
     for signal, area in session.query(
-            Signal, Control_Area).filter(Signal.control_area == Control_Area.id).order_by(Signal.id):
+            Signal, Control_Area).filter(Signal.control_area == Control_Area.id).order_by(Signal.id).all():
 
         data = {
             'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0].capitalize(), signal.name),
@@ -128,7 +128,7 @@ def write_signal(session, config):
 def write_junction(session, config):
 
     for junction, area in session.query(
-            Junction, Control_Area).filter(Junction.control_area == Control_Area.id).order_by(Junction.id):
+            Junction, Control_Area).filter(Junction.control_area == Control_Area.id).order_by(Junction.id).all():
 
         data = {
             'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0].capitalize(), junction.name),
@@ -168,7 +168,9 @@ def write_junction(session, config):
 def write_disconnector(session, config):
 
     for disconnector, area in session.query(
-            Disconnector, Control_Area).filter(Disconnector.control_area == Control_Area.id).order_by(Disconnector.id):
+        Disconnector, Control_Area).filter(
+        Disconnector.control_area == Control_Area.id).order_by(
+            Disconnector.id).all():
 
         data = {
             'nazev': '{} {}'.format(area.shortname.split(' ', 1)[0].capitalize(), disconnector.name),
