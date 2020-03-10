@@ -1,8 +1,8 @@
 """My2h JOP Transform Utility
 Usage:
   my2h_transform.py load_blocks <myjop_blk_file> <output_db_file>
+  my2h_transform.py reid <source_db_file> <output_map_csv>
   my2h_transform.py show_blocks <source_db_file>
-  my2h_transform.py reid <source_db_file>
   my2h_transform.py (-h | --help)
   my2h_transform.py --version
 
@@ -12,6 +12,7 @@ Options:
 """
 
 import os
+import csv
 import json
 import configparser
 from docopt import docopt
@@ -43,6 +44,33 @@ def main():
         datasets = load_datasets(args['<myjop_blk_file>'])
         save_datasets(session, datasets)
 
+    if args['reid']:
+
+        source_file = os.path.abspath(args['<source_db_file>'])
+        output_file = os.path.abspath(args['<output_map_csv>'])
+
+        SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
+        BASE.metadata.create_all(SQLEngine)
+        SQLSession = sessionmaker(bind=SQLEngine)
+        session = SQLSession()
+
+        map_ = ids_old_to_new(session)
+
+        data = []
+        all_blocks_ = all_blocks(session)
+        for old_id, new_id in sorted(map_.items(), key=lambda kv: kv[1]):
+            data.append({
+                'old_id': old_id,
+                'new_id': new_id,
+                'block_name': all_blocks_[old_id].name,
+            })
+
+        with open(output_file, 'w', newline='') as csvfile:
+            fieldnames = ['old_id', 'new_id', 'block_name']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(data)
+
     if args['show_blocks']:
 
         source_file = os.path.abspath(args['<source_db_file>'])
@@ -63,22 +91,6 @@ def main():
 
         with open('./output.ini', 'w') as configfile:
             config.write(configfile, space_around_delimiters=False)
-
-    if args['reid']:
-
-        source_file = os.path.abspath(args['<source_db_file>'])
-
-        SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
-        BASE.metadata.create_all(SQLEngine)
-        SQLSession = sessionmaker(bind=SQLEngine)
-        session = SQLSession()
-
-        map_ = ids_old_to_new(session)
-
-        all_blocks_ = all_blocks(session)
-        for old_id, new_id in sorted(map_.items(), key=lambda kv: kv[1]):
-            if new_id >= 100000:
-                print(new_id, all_blocks_[old_id].name)
 
 
 if __name__ == '__main__':
