@@ -226,3 +226,73 @@ def write_disconnector(session):
         })
 
     return blocks
+
+
+def write_railway(session):
+
+    blocks = []
+    for railway in session.query(Railway).order_by(Railway.id).all():
+
+        splitted_name = railway.shortname.split(' ', 1)
+        if len(splitted_name) == 1:
+            name = splitted_name[0]
+            nazev0 = '{}>>{}'.format(name.split('-', 1)[0], name.split('-', 1)[1])
+            nazev1 = '{}--{}'.format(name.split('-', 1)[0], name.split('-', 1)[1])
+            nazev2 = '{}--{}'.format(name.split('-', 1)[1], name.split('-', 1)[0])
+        elif len(splitted_name) == 2:
+            name = splitted_name[0]
+            number = splitted_name[1][0] if len(splitted_name[1]) == 2 else None
+            if number:
+                nazev0 = '{}>>{} {}'.format(name.split('-', 1)[0], name.split('-', 1)[1], number)
+                nazev1 = '{}--{} {}'.format(name.split('-', 1)[0], name.split('-', 1)[1], number)
+                nazev2 = '{}--{} {}'.format(name.split('-', 1)[1], name.split('-', 1)[0], number)
+            else:
+                nazev0 = '{}>>{}'.format(name.split('-', 1)[0], name.split('-', 1)[1])
+                nazev1 = '{}--{}'.format(name.split('-', 1)[0], name.split('-', 1)[1])
+                nazev2 = '{}--{}'.format(name.split('-', 1)[1], name.split('-', 1)[0])
+        else:
+            print('Error: unexpected name!')
+
+        sections = session.query(Track_Section).filter(
+            Track_Section.railway == str(
+                railway.id)).order_by(
+            Track_Section.id).all()
+
+        data0 = {
+            'nazev': nazev0,
+            'typ': 5,
+            'uvazkaA': railway.id + 1,
+            'uvazkaB': railway.id + 2,
+            'zabzar': 0,
+            'navestidla': 1 if railway.safeguard == 'AH' else 0,
+            'useky': ','.join([str(section.id) for section in sections]) + ',',
+        }
+
+        data1 = {
+            'nazev': nazev1,
+            'typ': 6,
+            'parent': railway.id,
+        }
+
+        data2 = {
+            'nazev': nazev2,
+            'typ': 6,
+            'parent': railway.id,
+        }
+
+        blocks.append({
+            'id': railway.id,
+            'data': data0,
+        })
+
+        blocks.append({
+            'id': railway.id + 1,
+            'data': data1,
+        })
+
+        blocks.append({
+            'id': railway.id + 2,
+            'data': data2,
+        })
+
+    return blocks

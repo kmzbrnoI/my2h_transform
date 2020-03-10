@@ -24,7 +24,7 @@ from sqlalchemy.orm import sessionmaker
 from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
 from storage import BASE
-from writer import write_track_section, write_section, write_signal, write_junction, write_disconnector
+from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector
 from reid import ids_old_to_new
 from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector
 
@@ -135,6 +135,7 @@ def main():
         session = SQLSession()
 
         blocks = []
+        blocks.extend(write_railway(session))
         blocks.extend(write_track_section(session))
         blocks.extend(write_section(session))
         blocks.extend(write_signal(session))
