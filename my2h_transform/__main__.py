@@ -134,14 +134,18 @@ def main():
         SQLSession = sessionmaker(bind=SQLEngine)
         session = SQLSession()
 
+        blocks = []
+        blocks.extend(write_track_section(session))
+        blocks.extend(write_section(session))
+        blocks.extend(write_signal(session))
+        blocks.extend(write_junction(session))
+        blocks.extend(write_disconnector(session))
+
         config = configparser.ConfigParser()
         config.optionxform = str
 
-        write_track_section(session, config)
-        write_section(session, config)
-        write_signal(session, config)
-        write_junction(session, config)
-        write_disconnector(session, config)
+        for block in sorted(blocks, key=lambda k: k['id']):
+            config[block['id']] = block['data']
 
         with open(output_file, 'w') as configfile:
             config.write(configfile, space_around_delimiters=False)

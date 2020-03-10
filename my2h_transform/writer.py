@@ -53,31 +53,45 @@ def prepare_data_for_section(section, parent, capitalize=True):
     return data
 
 
-def write_track_section(session, config):
+def write_track_section(session):
 
+    blocks = []
     for section, railway in session.query(
             Track_Section, Railway).filter(Track_Section.railway == Railway.id).order_by(Track_Section.id).all():
+        blocks.append({
+            'id': section.id,
+            'data': prepare_data_for_section(section, railway, capitalize=False),
+        })
 
-        config[section.id] = prepare_data_for_section(section, railway, capitalize=False)
+    return blocks
 
 
-def write_section(session, config):
+def write_section(session):
+
+    blocks = []
 
     # BLM (also with BLS dataset)
     for section, area in session.query(
             BLM, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id).all():
-
-        config[section.id] = prepare_data_for_section(section, area)
+        blocks.append({
+            'id': section.id,
+            'data': prepare_data_for_section(section, area),
+        })
 
     # BLK
     for section, area in session.query(
             BLK, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id).all():
+        blocks.append({
+            'id': section.id,
+            'data': prepare_data_for_section(section, area),
+        })
 
-        config[section.id] = prepare_data_for_section(section, area)
+    return blocks
 
 
-def write_signal(session, config):
+def write_signal(session):
 
+    blocks = []
     for signal, area in session.query(
             Signal, Control_Area).filter(Signal.control_area == Control_Area.id).order_by(Signal.id).all():
 
@@ -122,11 +136,17 @@ def write_signal(session, config):
         if rcs_count:
             data['OutType'] = 0
 
-        config[signal.id] = data
+        blocks.append({
+            'id': signal.id,
+            'data': data,
+        })
+
+    return blocks
 
 
-def write_junction(session, config):
+def write_junction(session):
 
+    blocks = []
     for junction, area in session.query(
             Junction, Control_Area).filter(Junction.control_area == Control_Area.id).order_by(Junction.id).all():
 
@@ -162,11 +182,17 @@ def write_junction(session, config):
             data['RCSb3'] = RCSb3
             data['RCSp3'] = RCSp3
 
-        config[junction.id] = data
+        blocks.append({
+            'id': junction.id,
+            'data': data,
+        })
+
+    return blocks
 
 
-def write_disconnector(session, config):
+def write_disconnector(session):
 
+    blocks = []
     for disconnector, area in session.query(
         Disconnector, Control_Area).filter(
         Disconnector.control_area == Control_Area.id).order_by(
@@ -185,4 +211,9 @@ def write_disconnector(session, config):
         data['RCSb0'] = RCSb0
         data['RCSp0'] = RCSp0
 
-        config[disconnector.id] = data
+        blocks.append({
+            'id': disconnector.id,
+            'data': data,
+        })
+
+    return blocks
