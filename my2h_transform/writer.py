@@ -92,7 +92,7 @@ def write_section(session):
 
     # BLK
     for section, area in session.query(
-            BLK, Control_Area).filter(BLM.control_area == Control_Area.id).order_by(BLM.id).all():
+            BLK, Control_Area).filter(BLK.control_area == Control_Area.id).order_by(BLK.id).all():
         blocks.append({
             'id': section.id,
             'data': prepare_data_for_section(section, area),
