@@ -26,7 +26,7 @@ from dataset import save_datasets
 from storage import BASE
 from writer import write_track_section, write_section, write_signal, write_junction, write_disconnector
 from reid import ids_old_to_new
-from remap import remap_control_area
+from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector
 
 
 def main():
@@ -106,14 +106,14 @@ def main():
                 reid[row['old_id']] = row['new_id']
 
         remap_control_area(reid, source_session, output_session)
+        remap_railway(reid, source_session, output_session)
+        remap_track_section(reid, source_session, output_session)
+        remap_blm(reid, source_session, output_session)
+        remap_blk(reid, source_session, output_session)
+        remap_signal(reid, source_session, output_session)
+        remap_junction(reid, source_session, output_session)
+        remap_disconnector(reid, source_session, output_session)
 
-#        railways
-#        track_sections
-#        blms
-#        blks
-#        signals
-#        junctions
-#        disconnectors
 #        blps
 #        pnls
 #        blezs
