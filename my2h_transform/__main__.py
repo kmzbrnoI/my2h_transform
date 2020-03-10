@@ -145,7 +145,7 @@ def main():
         config = configparser.ConfigParser()
         config.optionxform = str
 
-        for block in sorted(blocks, key=lambda k: int(k['id'])):
+        for block in sorted(blocks, key=lambda k: k['id']):
             config[block['id']] = block['data']
 
         with open(output_file, 'w') as configfile:

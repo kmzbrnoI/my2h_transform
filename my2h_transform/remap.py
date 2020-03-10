@@ -75,6 +75,8 @@ def remap_junction(reid, source_session, output_session):
         make_transient(item)
         item.id = reid[str(item.id)]
         item.control_area = reid[str(item.control_area)]
+        if item.second_ref != 0:
+            item.second_ref = reid[str(item.second_ref)]
         output_session.add(item)
         output_session.commit()
 

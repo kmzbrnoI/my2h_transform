@@ -217,7 +217,7 @@ def save_junction(session, datasets):
         data = dataset.split(';')
         name = data[5]
         junction = Junction(
-            id=int(data[3])*2,
+            id=int(data[3]),
             control_area=data[4].split(':', 1)[0],
             name=data[5],
             blok_s1=data[6],
@@ -240,12 +240,12 @@ def save_junction(session, datasets):
             # double junction -> split
             first, second = name.split('/')
             junction.name = min(first, second)
-            junction.second_ref = junction.id + 1
+            junction.second_ref = junction.id + 1000000
             junctions.append(deepcopy(junction))
 
             junction.name = max(first, second)
             junction.second_ref = junction.id
-            junction.id = junction.id + 1
+            junction.id = junction.id + 1000000
 
         junctions.append(junction)
 

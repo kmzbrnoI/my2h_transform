@@ -1,5 +1,6 @@
 from storage import Track_Section, Signal, Junction, Disconnector, BLK, BLM, Control_Area
-from typing import Dict, List, Any, Iterable
+from typing import Dict, List, Any, Iterable, Union
+import functools
 
 
 AREAS_REMAP = {
@@ -39,12 +40,43 @@ def _blocks_old_to_new(blocks: Iterable[Any], start: int, limit: int) -> Dict[in
     return remap
 
 
+def compare(a, b) -> int:
+    if a > b:
+        return 1
+    elif b > a:
+        return -1
+    else:
+        return 0
+
+
+def _junction_key(name) -> Union[str, int]:
+    if name.isnumeric():
+        return int(10*name)
+    elif name[:-1].isnumeric():
+        return int(10*name[:-1]) + ord(name[-1]) - ord('a')
+    else:
+        return name
+
+
+def _junction_compare(first, second) -> int:
+    first_key = _junction_key(first.name)
+    second_key = _junction_key(second.name)
+
+    if isinstance(first_key, int) and isinstance(second_key, str):
+        return -1
+    elif isinstance(first_key, str) and isinstance(second_key, int):
+        return 1
+    else:
+        return compare(first_key, second_key)
+
+
 def ids_old_to_new(session) -> Dict[int, int]:
     remap = {}
 
     # junctions 0-99
+    junctions = sorted(session.query(Junction).all(), key=functools.cmp_to_key(_junction_compare))
     remap.update(_blocks_old_to_new(
-        _blocks(session, Junction), start=0, limit=100,
+        junctions, start=0, limit=100,
     ))
 
     # station railway 100-149
