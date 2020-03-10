@@ -2,7 +2,7 @@ from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junc
 from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
 
 
-def prepare_data_for_section(section, parent, capitalize=True):
+def prepare_data_for_section(section, parent, capitalize=True, track=False):
 
     if capitalize:
         title = '{} {}'.format(parent.shortname.split(' ', 1)[0].capitalize(), section.name)
@@ -11,7 +11,7 @@ def prepare_data_for_section(section, parent, capitalize=True):
 
     data = {
         'nazev': title,
-        'typ': 1,
+        'typ': 9 if track else 1,
     }
 
     rcs_count = 0
@@ -69,7 +69,7 @@ def write_track_section(session):
             Track_Section, Railway).filter(Track_Section.railway == Railway.id).order_by(Track_Section.id).all():
         blocks.append({
             'id': section.id,
-            'data': prepare_data_for_section(section, railway, capitalize=False),
+            'data': prepare_data_for_section(section, railway, capitalize=False, track=True),
         })
 
     return blocks
