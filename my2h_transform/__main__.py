@@ -21,7 +21,7 @@ from sqlalchemy.orm import sessionmaker
 from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
 from storage import BASE
-from writer import write_track_section, write_signal, write_junction, write_disconnector
+from writer import write_track_section, write_section, write_signal, write_junction, write_disconnector
 from reid import ids_old_to_new
 
 
@@ -56,6 +56,7 @@ def main():
         config.optionxform = str
 
         write_track_section(session, config)
+        write_section(session, config)
         write_signal(session, config)
         write_junction(session, config)
         write_disconnector(session, config)
