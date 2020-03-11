@@ -48,7 +48,7 @@ class Track_Section(BASE):
     __tablename__ = 'track_sections'
 
     id = Column(Integer, primary_key=True)
-    railway = Column(String, ForeignKey(Railway.id))
+    railway = Column(Integer, ForeignKey(Railway.id))
     name = Column(String)
     safeguard = Column(String)
     velocity = Column(Integer)
@@ -58,10 +58,10 @@ class Track_Section(BASE):
     det4 = Column(String)
     boost = Column(Integer)
     power_source = Column(String)
-    one_L = Column(String)
-    two_L = Column(String)
-    one_S = Column(String)
-    two_S = Column(String)
+    in1L = Column(String)
+    in2L = Column(String)
+    in1S = Column(String)
+    in2S = Column(String)
     nvLtype = Column(String)
     hw_L = Column(String)
     out1_L = Column(String)
