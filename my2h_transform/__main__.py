@@ -4,6 +4,7 @@ Usage:
   my2h_transform.py reid <source_db_file> <output_reid_csv>
   my2h_transform.py remap_by_reid <source_db_file> <reid_csv> <output_db_file>
   my2h_transform.py create_ini <source_db_file> <output_ini_file>
+  my2h_transform.py create_ir <db_file>
   my2h_transform.py (-h | --help)
   my2h_transform.py --version
 
@@ -23,11 +24,12 @@ from sqlalchemy.orm import sessionmaker
 
 from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
-from storage import BASE
+from storage import BASE, IR
 from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector
 from reid import ids_old_to_new
 from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector, remap_drive_path
 from drive_path import load_drive_paths, save_drive_paths
+from create_ir import create_ir
 
 
 def main():
@@ -162,6 +164,15 @@ def main():
             config.write(configfile, space_around_delimiters=False)
 
         logging.info('hJOP configuration data succesfully saved in file [{}].'.format(output_file))
+
+    if args['create_ir']:
+        db_file = os.path.abspath(args['<db_file>'])
+        SQLEngine = create_engine('sqlite:///{}'.format(db_file), echo=False)
+        SQLSession = sessionmaker(bind=SQLEngine)
+        session = SQLSession()
+
+        session.query(IR).delete()
+        create_ir(session)
 
 
 if __name__ == '__main__':

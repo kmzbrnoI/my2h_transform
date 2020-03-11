@@ -30,6 +30,9 @@ class Control_Area(BASE):
     def __str__(self) -> str:
         return self.shortname
 
+    def output_name(self) -> str:
+        return self.shortname.title()
+
     __repr__ = __str__
 
 
@@ -278,6 +281,15 @@ class BLP(BASE):
         return f'{self.control_area}: {self.name}'
 
     __repr__ = __str__
+
+
+class IR(BASE):
+
+    __tablename__ = 'irs'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    inp = Column(String)
 
 
 class Drive_Path(BASE):
