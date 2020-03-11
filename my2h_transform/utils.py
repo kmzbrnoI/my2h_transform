@@ -50,7 +50,7 @@ def all_blocks(session) -> Dict[str, Any]:
 @lru_cache(maxsize=1000)
 def get_table_by_id(session, id_):
 
-    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector]
+    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector, BLUV]
 
     if id_ == 0:
         return None
