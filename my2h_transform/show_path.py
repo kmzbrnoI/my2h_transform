@@ -39,7 +39,7 @@ def show_path(session, path) -> None:
             poloha = '+' if poloha == '1' else '-'
             print(f'\t{name} {poloha}')
 
-    if path.var_bod_0 is not None:
+    if path.var_bod_0 != 0:
         print('Var bod 0: ' + str(get_block_by_id(session, int(path.var_bod_0))))
 
     if path.volnosti is not None:
