@@ -51,9 +51,9 @@ def compare(a, b) -> int:
 
 def _junction_key(name) -> Union[str, int]:
     if name.isnumeric():
-        return int(10*name)
+        return int(10 * name)
     elif name[:-1].isnumeric():
-        return int(10*name[:-1]) + ord(name[-1]) - ord('a')
+        return int(10 * name[:-1]) + ord(name[-1]) - ord('a')
     else:
         return name
 

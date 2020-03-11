@@ -1,6 +1,6 @@
 """My2h JOP Transform Utility
 Usage:
-  my2h_transform.py load_blocks <myjop_blk_file> <output_db_file>
+  my2h_transform.py load_blocks <myjop_blk_file> <myjop_ztb_file> <output_db_file>
   my2h_transform.py reid <source_db_file> <output_reid_csv>
   my2h_transform.py remap_by_reid <source_db_file> <reid_csv> <output_db_file>
   my2h_transform.py create_ini <source_db_file> <output_ini_file>
@@ -27,6 +27,7 @@ from storage import BASE
 from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector
 from reid import ids_old_to_new
 from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector
+from drive_path import load_drive_paths, save_drive_paths
 
 
 def main():
@@ -36,6 +37,8 @@ def main():
 
     if args['load_blocks']:
 
+        source_blk_file = os.path.abspath(args['<myjop_blk_file>'])
+        source_ztb_file = os.path.abspath(args['<myjop_ztb_file>'])
         output_file = os.path.abspath(args['<output_db_file>'])
 
         remove_file(output_file)
@@ -45,10 +48,15 @@ def main():
         SQLSession = sessionmaker(bind=SQLEngine)
         session = SQLSession()
 
-        datasets = load_datasets(args['<myjop_blk_file>'])
+        datasets = load_datasets(source_blk_file)
         save_datasets(session, datasets)
 
         logging.info('Blocks succesfully saved in file [{}].'.format(output_file))
+
+        drive_paths = load_drive_paths(source_ztb_file)
+        save_drive_paths(session, drive_paths)
+
+        logging.info('Drive paths succesfully saved in file [{}].'.format(output_file))
 
     if args['reid']:
 

@@ -278,3 +278,28 @@ class BLP(BASE):
         return f'{self.control_area}: {self.name}'
 
     __repr__ = __str__
+
+
+class Drive_Path(BASE):
+
+    __tablename__ = 'drive_paths'
+
+    id = Column(Integer, primary_key=True)
+    typ = Column(Integer)
+    control_area = Column(Integer, ForeignKey(Control_Area.id))
+    start_id = Column(Integer)
+    start_id_type = Column(String)
+    end_id = Column(Integer)
+    end_id_type = Column(String)
+    velocity = Column(Integer)
+    nedostVzdalenost = Column(Integer)
+    var_bod_0 = Column(Integer)
+    var_bod_0_typ = Column(String)
+    var_bod_1 = Column(Integer)
+    var_bod_1_typ = Column(String)
+    var_bod_2 = Column(Integer)
+    var_bod_2_typ = Column(String)
+    var_bod_3 = Column(Integer)
+    var_bod_3_typ = Column(String)
+    var_bod_4 = Column(Integer)
+    var_bod_4_typ = Column(String)

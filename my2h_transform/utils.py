@@ -1,5 +1,6 @@
 import os
 import logging
+from functools import lru_cache
 from typing import Dict, Any
 
 from storage import Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area
@@ -44,3 +45,19 @@ def all_blocks(session) -> Dict[str, Any]:
     for type_ in [Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area]:
         result.update({block.id: block for block in session.query(type_).all()})
     return result
+
+
+@lru_cache(maxsize=1000)
+def get_table_by_id(session, id_):
+
+    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector]
+
+    if id_ == 0:
+        return None
+
+    for entity in entities:
+        is_valid_entity = session.query(entity).filter(entity.id == str(id_)).count()
+        if is_valid_entity:
+            return str(entity)
+
+    return None

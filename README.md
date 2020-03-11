@@ -12,8 +12,8 @@ MyJOP To hJOP Transform Utility
 
 ## Real usage
 
-    # Load blocks from myJOP and create blk.db file
-    python my2h_transform load_blocks zadani/bloky.blk blk.db
+    # Load blocks & drive paths from myJOP and create blk.db file
+    python my2h_transform load_blocks zadani/bloky.blk zadani/zaverova_tabulka.ztb blk.db
     # Create reid_map.csv for blk.db file.
     python my2h_transform reid blk.db reid_map.csv
     # Transfrom blk.db by reid_map.csv to new_blk.db
