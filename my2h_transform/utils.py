@@ -61,3 +61,15 @@ def get_table_by_id(session, id_):
             return str(entity)
 
     return None
+
+
+@lru_cache(maxsize=1000)
+def get_block_by_id(session, id_) -> Any:
+    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector, BLUV, BLEZ]
+
+    for entity in entities:
+        block = session.query(entity).filter(entity.id == str(id_)).first()
+        if block is not None:
+            return block
+
+    return None
