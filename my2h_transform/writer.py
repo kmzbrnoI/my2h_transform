@@ -310,7 +310,7 @@ def write_ir(session):
         blocks.append({
             'id': ir.id,
             'data': {
-                'id': ir.id,
+                'nazev': ir.name,
                 'typ': 2,
                 'RCScnt': 1,
                 'RCSb0': ir.inp.split(':')[0],

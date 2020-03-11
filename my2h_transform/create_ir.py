@@ -1,5 +1,19 @@
 from storage import IR, BLK, Control_Area, Track_Section, Railway
 
+CONTROL_AREA_IDS = {
+    1: 1000,    # Skuhrov
+    2: 2000,    # Odbocka Skuhrov
+    3: 4000,    # Lesna
+    4: 5000,    # Skaly
+    5: 3000,    # Hrad
+    6: 10000,   # Ivancice
+    7: 9000,    # Metro
+    8: 8000,    # Podhradi
+    9: 6000,    # Brizky
+    10: 11000,  # Namest
+    11: 20000,  # Depo
+}
+
 
 def process_blk(session, block, next_id_per_area, areas_names) -> None:
     # required: det1, det2, det3, det4, in1L, in2L, in1S, in2S
@@ -47,7 +61,7 @@ def process_railway(session, block, railway_names, next_id_per_railway) -> None:
 
 def create_ir(session) -> None:
     next_id_per_area = {
-        area.id: (area.id*1000) + 300 for area in session.query(Control_Area).all()
+        id_: start_of_blocks + 300 for id_, start_of_blocks in CONTROL_AREA_IDS.items()
     }
     areas_names = {
         area.id: area.output_name() for area in session.query(Control_Area).all()
