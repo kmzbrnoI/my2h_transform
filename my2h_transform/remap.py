@@ -126,7 +126,6 @@ def remap_drive_path(reid, source_session, output_session):
         item.blocks_in_path = _remap_blocks_in_path(reid, source_session, item.blocks_in_path)
 
 
-
 #            'prestavniky': ';'.join(prestavniky),
 #            'odvraty_mimo_cestu': ';'.join(odvraty_mimo_cestu),
 #            'odvraty_v_ceste': ';'.join(odvraty_v_ceste),

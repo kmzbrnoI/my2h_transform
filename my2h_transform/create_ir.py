@@ -71,7 +71,6 @@ def create_ir(session) -> None:
     for block in blks:
         process_blk(session, block, next_id_per_area, areas_names)
 
-
     next_id_per_railway = {
         railway.id: railway.id + 50 for railway in session.query(Railway).all()
     }
