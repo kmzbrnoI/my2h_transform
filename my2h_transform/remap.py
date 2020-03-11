@@ -1,14 +1,15 @@
 from sqlalchemy.orm.session import make_transient
 
+from utils import get_table_by_id
 from storage import PNL, Control_Area, Railway, Track_Section, Signal, Junction, Disconnector, BLM, BLK, Drive_Path, BLUV, BLQ, BLEZ, BLP
 
 
 def _remap(reid, id_):
 
-    if id_ == 0:
-        return 0
-
-    return reid[str(id_)]
+    if id_ == 0 or id_ == '0':
+        return str(0)
+    else:
+        return reid[str(id_)]
 
 
 def _remap_id(reid, source_session, output_session, entity, control_area=True):
@@ -95,6 +96,18 @@ def remap_disconnector(reid, source_session, output_session):
     _remap_id(reid, source_session, output_session, Disconnector)
 
 
+def _remap_blocks_in_path(reid, session, data):
+
+    ids = []
+
+    for old_id in data.split(';'):
+        if get_table_by_id(session, old_id) == "<class 'storage.BLUV'>":
+            continue
+        ids.append(_remap(reid, old_id))
+
+    return ';'.join(ids)
+
+
 def remap_drive_path(reid, source_session, output_session):
 
     data = []
@@ -110,10 +123,9 @@ def remap_drive_path(reid, source_session, output_session):
         item.var_bod_2 = _remap(reid, item.var_bod_2)
         item.var_bod_3 = _remap(reid, item.var_bod_3)
         item.var_bod_4 = _remap(reid, item.var_bod_4)
+        item.blocks_in_path = _remap_blocks_in_path(reid, source_session, item.blocks_in_path)
 
-#        print('pred: ', item.id, item.blocks_in_path)
-#        item.blocks_in_path = ';'.join([ reid[str(e)] for e in item.blocks_in_path.split(';') ])
-#        print('po: ', item.id, item.blocks_in_path)
+
 
 #            'prestavniky': ';'.join(prestavniky),
 #            'odvraty_mimo_cestu': ';'.join(odvraty_mimo_cestu),
