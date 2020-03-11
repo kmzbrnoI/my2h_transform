@@ -1,3 +1,5 @@
+from typing import Optional
+
 from storage import IR, BLK, Control_Area, Track_Section, Railway
 
 CONTROL_AREA_IDS = {
@@ -15,6 +17,11 @@ CONTROL_AREA_IDS = {
 }
 
 
+def ir_from_inp(session, inp: str) -> Optional[IR]:
+    response = session.query(IR).filter(IR.inp == inp).all()
+    return response[0] if len(response) > 0 else None
+
+
 def process_blk(session, block, next_id_per_area, areas_names) -> None:
     # required: det1, det2, det3, det4, in1L, in2L, in1S, in2S
     dets = set([block.det1, block.det2, block.det3, block.det4])
@@ -27,6 +34,15 @@ def process_blk(session, block, next_id_per_area, areas_names) -> None:
     for name, inp in [('L', block.in2L), ('S', block.in2S)]:
         if inp != '0:0' and inp not in dets:
             name_ = areas_names[block.control_area] + ' ' + block.name + ' IR ' + name
+
+            exists = ir_from_inp(session, inp)
+            if exists is not None:
+                print(f'INFO: skipping addition of IR {name_}, '
+                      f'IR with same inputs already exists ({exists}).')
+                print(f'INFO: {exists} renamed.')
+                exists.name = exists.name[:-2]
+                continue
+
             ir = IR(
                 id=next_id_per_area[block.control_area],
                 name=name_,
