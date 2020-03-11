@@ -3,8 +3,8 @@ Usage:
   my2h_transform.py load_blocks <myjop_blk_file> <myjop_ztb_file> <output_db_file>
   my2h_transform.py reid <source_db_file> <output_reid_csv>
   my2h_transform.py remap_by_reid <source_db_file> <reid_csv> <output_db_file>
-  my2h_transform.py create_ini <source_db_file> <output_ini_file>
   my2h_transform.py create_ir <db_file>
+  my2h_transform.py create_ini <source_db_file> <output_ini_file>
   my2h_transform.py (-h | --help)
   my2h_transform.py --version
 
