@@ -303,3 +303,8 @@ class Drive_Path(BASE):
     var_bod_3_typ = Column(String)
     var_bod_4 = Column(Integer)
     var_bod_4_typ = Column(String)
+    blocks_in_path = Column(String)
+    prestavniky = Column(String)
+    odvraty_mimo_cestu = Column(String)
+    odvraty_v_ceste = Column(String)
+    volnosti = Column(String)
