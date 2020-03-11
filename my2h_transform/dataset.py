@@ -378,7 +378,7 @@ def save_datasets(session, datasets):
             souhlas=data[7],
             nvID=data[8],
             pocetID=data[9])
-        blms.append(bluv)
+        bluvs.append(bluv)
 
     session.add_all(bluvs)
     session.commit()
