@@ -96,7 +96,7 @@ def remap_disconnector(reid, source_session, output_session):
     _remap_id(reid, source_session, output_session, Disconnector)
 
 
-def _remap_blocks_in_path(reid, session, data):
+def _remap_blocks(reid, session, data):
 
     ids = []
 
@@ -104,6 +104,63 @@ def _remap_blocks_in_path(reid, session, data):
         if get_table_by_id(session, old_id) == "<class 'storage.BLUV'>":
             continue
         ids.append(_remap(reid, old_id))
+
+    return ';'.join(ids)
+
+
+def _remap_prestavniky(reid, session, data):
+
+    ids = []
+
+    if data == '':
+        return None
+
+    for old_id in data.split(';'):
+        if get_table_by_id(session, old_id.split('-', 1)[0]) == "<class 'storage.BLUV'>":
+            continue
+        ids.append('{}-{}'.format(_remap(reid, old_id.split('-', 1)[0]), old_id.split('-', 1)[1]))
+
+    return ';'.join(ids)
+
+
+def _remap_odvraty_mimo(reid, session, data):
+
+    ids = []
+
+    if data == '':
+        return None
+
+    for old_id in data.split(';'):
+        dd = old_id.split('-')
+        if get_table_by_id(session, dd[0]) in ("<class 'storage.BLUV'>", "<class 'storage.BLEZ'>"):
+            continue
+        if get_table_by_id(session, dd[2]) == "<class 'storage.BLUV'>":
+            continue
+        if get_table_by_id(session, dd[3]) == "<class 'storage.BLUV'>":
+            continue
+
+        ids.append('{}-{}-{}-{}'.format(_remap(reid, dd[0]), dd[1], _remap(reid, dd[2]), _remap(reid, dd[3])))
+
+    return ';'.join(ids)
+
+
+def _remap_volnosti(reid, session, data):
+
+    ids = []
+
+    if data == '':
+        return None
+
+    for old_id in data.split(';'):
+        dd = old_id.split('-')
+        if get_table_by_id(session, dd[0]) in ("<class 'storage.BLUV'>", "<class 'storage.BLEZ'>"):
+            continue
+        if get_table_by_id(session, dd[1]) == "<class 'storage.BLUV'>":
+            continue
+        if get_table_by_id(session, dd[2]) == "<class 'storage.BLUV'>":
+            continue
+
+        ids.append('{}-{}-{}'.format(_remap(reid, dd[0]), _remap(reid, dd[1]), _remap(reid, dd[2])))
 
     return ';'.join(ids)
 
@@ -123,15 +180,11 @@ def remap_drive_path(reid, source_session, output_session):
         item.var_bod_2 = _remap(reid, item.var_bod_2)
         item.var_bod_3 = _remap(reid, item.var_bod_3)
         item.var_bod_4 = _remap(reid, item.var_bod_4)
-        item.blocks_in_path = _remap_blocks_in_path(reid, source_session, item.blocks_in_path)
-
-
-#            'prestavniky': ';'.join(prestavniky),
-#            'odvraty_mimo_cestu': ';'.join(odvraty_mimo_cestu),
-#            'odvraty_v_ceste': ';'.join(odvraty_v_ceste),
-#            'volnosti': ';'.join(volnosti),
-#
-
+        item.blocks = _remap_blocks(reid, source_session, item.blocks)
+        item.prestavniky = _remap_prestavniky(reid, source_session, item.prestavniky)
+        item.odvraty_mimo = _remap_odvraty_mimo(reid, source_session, item.odvraty_mimo)
+        item.odvraty_v = _remap_prestavniky(reid, source_session, item.odvraty_v)  # vazne stejna signatura
+        item.volnosti = _remap_volnosti(reid, source_session, item.volnosti)
         data.append(item)
 
     output_session.add_all(data)

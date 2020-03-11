@@ -3,7 +3,7 @@ import logging
 from functools import lru_cache
 from typing import Dict, Any
 
-from storage import Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area, BLUV
+from storage import Junction, BLK, BLM, Signal, Disconnector, Railway, Track_Section, Control_Area, BLUV, BLEZ
 
 DATASET_TYPES = ['PNL', 'OR', 'OPM', 'OPD', 'L', 'W', 'T', 'H', 'B', 'C', 'A', 'D', 'E', 'V', 'M', 'S', 'K', 'UV', 'Q',
                  'PST', 'EZ', 'N', 'R', 'P']
@@ -50,7 +50,7 @@ def all_blocks(session) -> Dict[str, Any]:
 @lru_cache(maxsize=1000)
 def get_table_by_id(session, id_):
 
-    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector, BLUV]
+    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector, BLUV, BLEZ]
 
     if id_ == 0:
         return None
