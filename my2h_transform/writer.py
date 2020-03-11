@@ -1,4 +1,4 @@
-from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector
+from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR
 from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
 
 
@@ -299,6 +299,23 @@ def write_railway(session):
         blocks.append({
             'id': railway.id + 2,
             'data': data2,
+        })
+
+    return blocks
+
+
+def write_ir(session):
+    blocks = []
+    for ir in session.query(IR).order_by(IR.id).all():
+        blocks.append({
+            'id': ir.id,
+            'data': {
+                'id': ir.id,
+                'typ': 2,
+                'RCScnt': 1,
+                'RCSb0': ir.inp.split(':')[0],
+                'RCSp0': ir.inp.split(':')[1],
+            }
         })
 
     return blocks
