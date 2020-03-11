@@ -34,7 +34,7 @@ def show_path(session, path) -> None:
     if path.odvraty_v is not None:
         print('Odvraty v:')
         for odvrat in path.odvraty_v.split(';'):
-            id_, poloha = prest.split('-')
+            id_, poloha = odvrat.split('-')
             name = str(get_block_by_id(session, int(id_)))
             poloha = '+' if poloha == '1' else '-'
             print(f'\t{name} {poloha}')
