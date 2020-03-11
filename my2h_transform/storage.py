@@ -318,3 +318,6 @@ class Drive_Path(BASE):
     odvraty_mimo = Column(String)
     odvraty_v = Column(String)
     volnosti = Column(String)
+
+    def __str__(self) -> str:
+        return str(self.id)
