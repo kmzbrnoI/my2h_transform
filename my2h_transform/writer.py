@@ -394,7 +394,7 @@ def write_drive_path(session):
         data = {
             'Typ': drive_path.typ,
             'useky': ','.join(useky) + ',',
-            'prisl': ','.join(prisl) + ',',
+            'prisl': ''.join(prisl),
         }
 
         if vyhybky:
