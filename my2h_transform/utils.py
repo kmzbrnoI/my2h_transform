@@ -14,7 +14,7 @@ def remove_file(fname):
 
     if os.path.exists(fname):
         os.remove(fname)
-        logging.info('Old output file [{}] was removed.'.format(fname))
+        logging.info(f'Old output file [{fname}] was removed.')
 
 
 def load_datasets(fname):
@@ -35,7 +35,7 @@ def load_datasets(fname):
             else:
                 dataset.append(line.strip('\n'))
 
-    logging.info('Datasets loaded from file [{}].'.format(fname))
+    logging.info(f'Datasets loaded from file [{fname}].')
 
     return datasets
 
