@@ -165,8 +165,8 @@ def write_signal(session):
 
     # railway signals
     for signal, railway in session.query(
-            Signal, Railway).filter(Signal.control_area == None, Signal.trat1 == Railway.id).order_by(Signal.id).all():
-        name = railway.shortname+ ' ' + signal.name
+            Signal, Railway).filter(Signal.control_area is None, Signal.trat1 == Railway.id).order_by(Signal.id).all():
+        name = railway.shortname + ' ' + signal.name
         data = signal_data(signal, name)
 
         blocks.append({
@@ -377,7 +377,7 @@ def _prepare_useky(session, id_, blocks):
     return sections, signals
 
 
-def _prepare_vyhybly(session, id_, blocks):
+def _prepare_vyhybky(session, id_, blocks):
 
     if blocks is None:
         return None
@@ -402,16 +402,45 @@ def _prepare_vyhybly(session, id_, blocks):
     return vyhybky
 
 
+def _prepare_drive_path_name(session, path):
+
+    signal1 = get_block_by_id(session, path.start_id)
+    # railway signals
+    if signal1.control_area is None:
+        railway1 = get_block_by_id(session, signal1.trat1)
+        name1 = railway.shortname + ' ' + signal1.name
+    # area signals
+    else:  #
+        area1 = get_block_by_id(session, signal1.control_area)
+        name1 = area1.shortname.split(' ', 1)[0].capitalize() + ' ' + signal1.name
+
+    section2 = get_block_by_id(session, path.end_id)
+    if isinstance(section2, Track_Section):
+        railway2 = get_block_by_id(session, section2.railway)
+        name2 = prepare_data_for_section(section2, railway2, capitalize=False, track=True)['nazev']
+    elif isinstance(section2, BLK) or isinstance(section2, BLM):
+        area2 = get_block_by_id(session, section2.control_area)
+        name2 = prepare_data_for_section(section2, area2)['nazev']
+    else:
+        logging.warning('JC end_id contains unexpected block {}, JC.id {}'.format(type(section2), path.id))
+
+    return '{}>{}'.format(name1, name2)
+
+
 def write_drive_path(session):
 
     blocks = []
     for drive_path in session.query(Drive_Path).order_by(Drive_Path.id).all():
 
         useky, prisl = _prepare_useky(session, drive_path.id, drive_path.blocks)
-        vyhybky = _prepare_vyhybly(session, drive_path.id, drive_path.prestavniky)
+        vyhybky = _prepare_vyhybky(session, drive_path.id, drive_path.prestavniky)
 
         data = {
+            'Nazev': _prepare_drive_path_name(session, drive_path),
+            'Nav': drive_path.start_id,
             'Typ': drive_path.typ,
+            'RychDalsiN': '{0:g}'.format(drive_path.velocity / 10),
+            'RychNoDalsiN': '{0:g}'.format(drive_path.velocity / 10),
             'useky': ','.join(useky) + ',',
             'prisl': ''.join(prisl),
         }
