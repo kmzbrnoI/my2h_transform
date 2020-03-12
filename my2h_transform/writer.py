@@ -323,7 +323,7 @@ def write_ir(session):
     return blocks
 
 
-def prepare_useky(session, id_, blocks):
+def _prepare_useky(session, id_, blocks):
 
     items = []
     for item in blocks.split(';'):
@@ -358,18 +358,47 @@ def prepare_useky(session, id_, blocks):
     return sections, signals
 
 
+def _prepare_vyhybly(session, id_, blocks):
+
+    if blocks is None:
+        return None
+
+    items = []
+    for item in blocks.split(';'):
+        items.append({
+            'id': item.split('-')[0],
+            'poloha': item.split('-')[1],
+            'block': get_block_by_id(session, item.split('-')[0]),
+        })
+
+    vyhybky = []
+    for item in items:
+        poloha = int(item['poloha']) - 1
+        vyhybky.append('({},{})'.format(item['id'], poloha))
+
+        # TODO: Je jedna iterace pres second_ref dostatecna?
+        if item['block'].second_ref:
+            vyhybky.append('({},{})'.format(item['block'].second_ref, poloha))
+
+    return vyhybky
+
+
 def write_drive_path(session):
 
     blocks = []
     for drive_path in session.query(Drive_Path).order_by(Drive_Path.id).all():
 
-        useky, prisl = prepare_useky(session, drive_path.id, drive_path.blocks)
+        useky, prisl = _prepare_useky(session, drive_path.id, drive_path.blocks)
+        vyhybky = _prepare_vyhybly(session, drive_path.id, drive_path.prestavniky)
 
         data = {
             'Typ': drive_path.typ,
-            'useky': ','.join([item for item in useky]) + ',',
-            'prisl': ','.join([item for item in prisl]) + ',',
+            'useky': ','.join(useky) + ',',
+            'prisl': ','.join(prisl) + ',',
         }
+
+        if vyhybky:
+            data['vyhybky'] = ''.join(vyhybky)
 
         blocks.append({
             'id': drive_path.id,
