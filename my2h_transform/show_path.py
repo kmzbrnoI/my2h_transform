@@ -9,7 +9,7 @@ def show_path(session, path) -> None:
 
     print('Blocks:')
     print('\n'.join(
-        '\t' + str(get_block_by_id(session, int(block)))
+        '\t'+str(get_block_by_id(session, int(block)))
         for block in path.blocks.split(';')
     ))
 
@@ -29,6 +29,7 @@ def show_path(session, path) -> None:
             poloha1 = '+' if poloha1 == '1' else '-'
             poloha2 = '+' if poloha2 == '1' else '-'
             print(f'\t{name1} {poloha1}, {name2} {poloha2}')
+
 
     if path.odvraty_v is not None:
         print('Odvraty v:')
