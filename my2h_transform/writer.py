@@ -1,3 +1,4 @@
+import logging
 from utils import get_block_by_id
 from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR, Drive_Path
 from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
@@ -322,7 +323,7 @@ def write_ir(session):
     return blocks
 
 
-def prepare_useky(session, blocks):
+def prepare_useky(session, id_, blocks):
 
     items = []
     for item in blocks.split(';'):
@@ -330,6 +331,9 @@ def prepare_useky(session, blocks):
             'id': item,
             'block': get_block_by_id(session, item),
         })
+
+    if not isinstance(items[-1]['block'], Signal):
+        logging.warning('JC Blocks doesn\'t ends with Signal for JC.id {}'.format(id_))
 
     sections = []
     for item in items:
@@ -341,9 +345,17 @@ def prepare_useky(session, blocks):
                 item['block'], Signal), f"WARN: {item['id']} has wrong type"
 
         if isinstance(item['block'], Track_Section) or isinstance(item['block'], BLM) or isinstance(item['block'], BLK):
-            sections.append(item['block'])
+            sections.append(item['id'])
 
-    return sections, None
+    signals = []
+    for i in range(len(items) - 1):  # len(items) - 1 => vynechavame posledni Signal, pokud chybi, nema to vliv
+        if isinstance(items[i]['block'], Signal) and i == 0:
+            logging.warning('JC Blocks starts with Signal for JC.id {}'.format(id_))
+
+        if isinstance(items[i]['block'], Signal) and i != 0:
+            signals.append('({},{})'.format(items[i - 1]['id'], items[i]['id']))
+
+    return sections, signals
 
 
 def write_drive_path(session):
@@ -351,12 +363,12 @@ def write_drive_path(session):
     blocks = []
     for drive_path in session.query(Drive_Path).order_by(Drive_Path.id).all():
 
-        useky, prisl = prepare_useky(session, drive_path.blocks)
+        useky, prisl = prepare_useky(session, drive_path.id, drive_path.blocks)
 
         data = {
             'Typ': drive_path.typ,
-            'useky': ','.join([str(item.id) for item in useky]) + ',',
-            'prisl': 'n/a',
+            'useky': ','.join([item for item in useky]) + ',',
+            'prisl': ','.join([item for item in prisl]) + ',',
         }
 
         blocks.append({
