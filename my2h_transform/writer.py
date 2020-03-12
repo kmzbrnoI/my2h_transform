@@ -424,7 +424,7 @@ def _prepare_drive_path_name(session, path):
     else:
         logging.warning('JC end_id contains unexpected block {}, JC.id {}'.format(type(section2), path.id))
 
-    return '{}>{}'.format(name1, name2)
+    return '{} > {}'.format(name1, name2)
 
 
 def write_drive_path(session):
