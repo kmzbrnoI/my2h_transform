@@ -349,7 +349,7 @@ def write_drive_path(session):
 
         data = {
             'Typ': drive_path.typ,
-            'useky': ','.join([ str(item.id) for item in useky ]) + ',',
+            'useky': ','.join([str(item.id) for item in useky]) + ',',
             'prisl': 'n/a',
         }
 
