@@ -48,22 +48,6 @@ def all_blocks(session) -> Dict[str, Any]:
 
 
 @lru_cache(maxsize=1000)
-def get_table_by_id(session, id_):
-
-    entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector, BLUV, BLEZ]
-
-    if id_ == 0:
-        return None
-
-    for entity in entities:
-        is_valid_entity = session.query(entity).filter(entity.id == str(id_)).count()
-        if is_valid_entity:
-            return str(entity)
-
-    return None
-
-
-@lru_cache(maxsize=1000)
 def get_block_by_id(session, id_) -> Any:
     entities = [Railway, Control_Area, Track_Section, Signal, BLK, BLM, Junction, Disconnector, BLUV, BLEZ]
 

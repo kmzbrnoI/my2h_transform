@@ -1,6 +1,6 @@
 from sqlalchemy.orm.session import make_transient
 
-from utils import get_table_by_id
+from utils import get_block_by_id
 from storage import PNL, Control_Area, Railway, Track_Section, Signal, Junction, Disconnector, BLM, BLK, Drive_Path, BLUV, BLQ, BLEZ, BLP
 
 
@@ -101,7 +101,7 @@ def _remap_blocks(reid, session, data):
     ids = []
 
     for old_id in data.split(';'):
-        if get_table_by_id(session, old_id) == "<class 'storage.BLUV'>":
+        if isinstance(get_block_by_id(session, old_id), BLUV):
             continue
         ids.append(_remap(reid, old_id))
 
@@ -116,7 +116,7 @@ def _remap_prestavniky(reid, session, data):
         return None
 
     for old_id in data.split(';'):
-        if get_table_by_id(session, old_id.split('-', 1)[0]) == "<class 'storage.BLUV'>":
+        if isinstance(get_block_by_id(session, old_id.split('-', 1)[0]), BLUV):
             continue
         ids.append('{}-{}'.format(_remap(reid, old_id.split('-', 1)[0]), old_id.split('-', 1)[1]))
 
@@ -132,11 +132,11 @@ def _remap_odvraty_mimo(reid, session, data):
 
     for old_id in data.split(';'):
         dd = old_id.split('-')
-        if get_table_by_id(session, dd[0]) in ("<class 'storage.BLUV'>", "<class 'storage.BLEZ'>"):
+        if type(get_block_by_id(session, dd[0])) in (BLUV, BLEZ):
             continue
-        if get_table_by_id(session, dd[2]) == "<class 'storage.BLUV'>":
+        if isinstance(get_block_by_id(session, dd[2]), BLUV):
             continue
-        if get_table_by_id(session, dd[3]) == "<class 'storage.BLUV'>":
+        if isinstance(get_block_by_id(session, dd[3]), BLUV):
             continue
 
         ids.append('{}-{}-{}-{}'.format(_remap(reid, dd[0]), dd[1], _remap(reid, dd[2]), _remap(reid, dd[3])))
@@ -153,11 +153,11 @@ def _remap_volnosti(reid, session, data):
 
     for old_id in data.split(';'):
         dd = old_id.split('-')
-        if get_table_by_id(session, dd[0]) in ("<class 'storage.BLUV'>", "<class 'storage.BLEZ'>"):
+        if type(get_block_by_id(session, dd[0])) in (BLUV, BLEZ):
             continue
-        if get_table_by_id(session, dd[1]) == "<class 'storage.BLUV'>":
+        if isinstance(get_block_by_id(session, dd[1]), BLUV):
             continue
-        if get_table_by_id(session, dd[2]) == "<class 'storage.BLUV'>":
+        if isinstance(get_block_by_id(session, dd[2]), BLUV):
             continue
 
         ids.append('{}-{}-{}'.format(_remap(reid, dd[0]), _remap(reid, dd[1]), _remap(reid, dd[2])))
