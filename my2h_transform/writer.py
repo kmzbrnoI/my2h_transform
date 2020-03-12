@@ -1,4 +1,5 @@
-from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR
+from utils import get_block_by_id
+from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR, Drive_Path
 from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
 
 
@@ -316,6 +317,45 @@ def write_ir(session):
                 'RCSb0': ir.inp.split(':')[0],
                 'RCSp0': ir.inp.split(':')[1],
             }
+        })
+
+    return blocks
+
+
+def prepare_useky(session, blocks):
+
+    items = []
+    print(blocks)
+    for item in blocks.split(';'):
+        items.append({
+            'id': item,
+            'block': get_block_by_id(session, item),
+        })
+
+    sections = []
+    for item in items:
+        if isinstance(item['block'], Track_Section) or isinstance(item['block'], BLM) or isinstance(item['block'], BLK):
+            sections.append(item['block'])
+
+    return sections, None
+
+
+def write_drive_path(session):
+
+    blocks = []
+    for drive_path in session.query(Drive_Path).order_by(Drive_Path.id).all():
+
+        useky, prisl = prepare_useky(session, drive_path.blocks)
+
+        data = {
+            'Typ': drive_path.typ,
+            'useky': ','.join([ str(item.id) for item in useky ]) + ',',
+            'prisl': 'n/a',
+        }
+
+        blocks.append({
+            'id': drive_path.id,
+            'data': data,
         })
 
     return blocks

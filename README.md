@@ -14,14 +14,21 @@ MyJOP To hJOP Transform Utility
 
     # Load blocks & drive paths from myJOP and create blk.db file
     python my2h_transform load_blocks zadani/bloky.blk zadani/zaverova_tabulka.ztb blk.db
+
     # Create reid_map.csv for blk.db file.
     python my2h_transform reid blk.db reid_map.csv
+
     # Transfrom blk.db by reid_map.csv to new_blk.db
     python my2h_transform remap_by_reid blk.db reid_map.csv new_blk.db
+
     # Create IR table
     python my2h_transform create_ir new_blk.db
+
     # Create .ini file for hJOP from new_blk.db
     python my2h_transform create_ini new_blk.db blk.ini
+
+    # Create .ini file for hJOP 'jizdni cesty' from new_blk.db
+    python my2h_transform create_jc_ini new_blk.db JC.ini
 
 
 ## Development & Contributions
