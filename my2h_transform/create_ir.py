@@ -88,7 +88,7 @@ def create_ir(session) -> None:
         process_blk(session, block, next_id_per_area, areas_names)
 
     next_id_per_railway = {
-        railway.id: railway.id + 50 for railway in session.query(Railway).all()
+        railway.id: railway.id + 30 for railway in session.query(Railway).all()
     }
     railway_names = {
         railway.id: railway.shortname.split(' ')[0] for railway in session.query(Railway).all()
