@@ -165,7 +165,7 @@ def write_signal(session):
 
     # railway signals
     for signal, railway in session.query(
-            Signal, Railway).filter(Signal.control_area is None, Signal.trat1 == Railway.id).order_by(Signal.id).all():
+            Signal, Railway).filter(Signal.control_area == None, Signal.trat1 == Railway.id).order_by(Signal.id).all():
         name = railway.shortname + ' ' + signal.name
         data = signal_data(signal, name)
 
