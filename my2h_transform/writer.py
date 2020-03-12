@@ -325,7 +325,6 @@ def write_ir(session):
 def prepare_useky(session, blocks):
 
     items = []
-    print(blocks)
     for item in blocks.split(';'):
         items.append({
             'id': item,
@@ -334,6 +333,13 @@ def prepare_useky(session, blocks):
 
     sections = []
     for item in items:
+
+        assert isinstance(
+            item['block'], Track_Section) or isinstance(
+            item['block'], BLM) or isinstance(
+            item['block'], BLK) or isinstance(
+                item['block'], Signal), f"WARN: {item['id']} has wrong type"
+
         if isinstance(item['block'], Track_Section) or isinstance(item['block'], BLM) or isinstance(item['block'], BLK):
             sections.append(item['block'])
 
