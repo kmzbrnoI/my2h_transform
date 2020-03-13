@@ -1,7 +1,7 @@
 """My2h JOP Transform Utility
 Usage:
   my2h_transform.py load_blocks <myjop_blk_file> <myjop_ztb_file> <output_db_file>
-  my2h_transform.py reid <source_db_file> <output_reid_csv>
+  my2h_transform.py reid <source_db_file> <output_blocks_csv> <output_paths_csv>
   my2h_transform.py remap_by_reid <source_db_file> <reid_csv> <output_db_file>
   my2h_transform.py create_ir <db_file>
   my2h_transform.py create_ini <source_db_file> <output_ini_file>
@@ -29,7 +29,8 @@ from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
 from storage import BASE, IR, Drive_Path
 from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector, write_ir, write_drive_path
-from reid_blocks import ids_old_to_new
+from reid_blocks import ids_old_to_new as block_ids_old_to_new
+from reid_drive_paths import ids_old_to_new as drive_path_ids_old_to_new
 from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector, remap_drive_path
 from drive_path import load_drive_paths, save_drive_paths
 from create_ir import create_ir
@@ -67,16 +68,18 @@ def main():
     if args['reid']:
 
         source_file = os.path.abspath(args['<source_db_file>'])
-        output_file = os.path.abspath(args['<output_reid_csv>'])
+        output_blocks_file = os.path.abspath(args['<output_blocks_csv>'])
+        output_paths_file = os.path.abspath(args['<output_paths_csv>'])
 
-        remove_file(output_file)
+        remove_file(output_blocks_file)
+        remove_file(output_paths_file)
 
         SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
         # BASE.metadata.create_all(SQLEngine)
         SQLSession = sessionmaker(bind=SQLEngine)
         session = SQLSession()
 
-        map_ = ids_old_to_new(session)
+        map_ = block_ids_old_to_new(session)
 
         data = []
         all_blocks_ = all_blocks(session)
@@ -87,13 +90,23 @@ def main():
                 'block_name': all_blocks_[old_id].name,
             })
 
-        with open(output_file, 'w', newline='') as csvfile:
+        with open(output_blocks_file, 'w', newline='') as csvfile:
             fieldnames = ['old_id', 'new_id', 'block_name']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
 
-        logging.info('reid_map succesfully saved in file [{}].'.format(output_file))
+        logging.info('reid_block_map succesfully saved in file [{}].'.format(output_blocks_file))
+
+
+        data = [{'old_id': old, 'new_id': new} for old, new in drive_path_ids_old_to_new(session)]
+        with open(output_paths_file, 'w', newline='') as csvfile:
+            fieldnames = ['old_id', 'new_id']
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(data)
+
+        logging.info('reid_paths_map succesfully saved in file [{}].'.format(output_paths_file))
 
     if args['remap_by_reid']:
 

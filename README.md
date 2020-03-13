@@ -16,10 +16,10 @@ MyJOP To hJOP Transform Utility
     python my2h_transform load_blocks zadani/bloky.blk zadani/zaverova_tabulka.ztb blk.db
 
     # Create reid_map.csv for blk.db file.
-    python my2h_transform reid blk.db reid_map.csv
+    python my2h_transform reid blk.db blocks_reid_map.csv paths_reid_map.csv
 
     # Transfrom blk.db by reid_map.csv to new_blk.db
-    python my2h_transform remap_by_reid blk.db reid_map.csv new_blk.db
+    python my2h_transform remap_by_reid blk.db blocks_reid_map.csv new_blk.db
 
     # Create IR table
     python my2h_transform create_ir new_blk.db
