@@ -145,36 +145,38 @@ def save_signal(session, datasets):
             trat2=None)
         signals.append(signal)
 
-#    print('Signal from C')
-#    for dataset in datasets[DATASET_TYPES.index('C')]['data'][1:]:
-#        data = dataset.split(';')
-#        signal = Signal(
-#            id=data[3],
-#            signal_type='skupinove',
-#            control_area=data[4].split(':', 1)[0],
-#            name=data[5],
-#            shunt=None,
-#            direction=None,
-#            skupinNv=None,
-#            pst1=None,
-#            pst2=None,
-#            typ=data[13],
-#            hw=data[14],
-#            out1=data[15],
-#            out2=data[16],
-#            out3=data[17],
-#            out4=data[18],
-#            out5=data[19],
-#            usek1=None,
-#            usek2=None,
-#            blokUV=None,
-#            skupina1=data[24] if data[3] == str(329) else None,
-#            skupina2=data[25] if data[3] == str(329) else None,
-#            skupina3=data[26] if data[3] == str(329) else None,
-#            trat1=None,
-#            trat2=None)
-#        signals.append(signal)
-#
+    print('Signal from A')
+    for dataset in datasets[DATASET_TYPES.index('A')]['data'][1:]:
+        data = dataset.split(';')
+        railway = session.query(Railway).filter(Railway.shortname == data[6]).first()
+
+        signal = Signal(
+            id=data[3],
+            signal_type='hradlo',
+            control_area=data[4].split(':', 1)[0],
+            name=data[5],
+            shunt=None,
+            direction=data[8],
+            skupinNv=None,
+            pst1=None,
+            pst2=None,
+            typ=40,
+            hw=100,
+            out1='',
+            out2='',
+            out3='',
+            out4='',
+            out5='',
+            usek1=None,
+            usek2=None,
+            blokUV=None,
+            skupina1=None,
+            skupina2=None,
+            skupina3=None,
+            trat1=railway.id,
+            trat2=None)
+        signals.append(signal)
+
     print('Signal from E')
     for dataset in datasets[DATASET_TYPES.index('E')]['data'][1:]:
         data = dataset.split(';')

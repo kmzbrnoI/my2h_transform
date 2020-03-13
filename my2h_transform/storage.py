@@ -45,6 +45,11 @@ class Railway(BASE):
     name = Column(String)
     safeguard = Column(String)
 
+    def __str__(self) -> str:
+        return self.shortname
+
+    __repr__ = __str__
+
 
 class Track_Section(BASE):
 
