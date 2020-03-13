@@ -449,6 +449,16 @@ def _prepare_odvraty(session, id_, blocks):
     return odvraty
 
 
+def prepare_variantni_body(path):
+
+    variantni_body = []
+    for bod in [path.var_bod_0, path.var_bod_1, path.var_bod_2, path.var_bod_3]:
+        if int(bod) != 0:
+            variantni_body.append(str(bod))
+
+    return variantni_body if len(variantni_body) else None
+
+
 def write_drive_path(session):
 
     blocks = []
@@ -457,6 +467,7 @@ def write_drive_path(session):
         useky, prisl = _prepare_useky(session, drive_path.id, drive_path.blocks)
         vyhybky = _prepare_vyhybky(session, drive_path.id, drive_path.prestavniky)
         odvraty = _prepare_odvraty(session, drive_path.id, drive_path.odvraty_mimo)
+        variantni_body = prepare_variantni_body(drive_path)
 
         data = {
             'Nazev': _prepare_drive_path_name(session, drive_path),
@@ -472,6 +483,8 @@ def write_drive_path(session):
             data['vyhybky'] = ''.join(vyhybky)
         if odvraty:
             data['odvraty'] = ''.join(odvraty)
+        if variantni_body:
+            data['vb'] = ';'.join(variantni_body) + ';'
 
         blocks.append({
             'id': drive_path.id,
