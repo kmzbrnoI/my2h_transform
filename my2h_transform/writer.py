@@ -344,7 +344,7 @@ def write_ir(session):
     return blocks
 
 
-def _prepare_useky(session, id_, blocks):
+def _prepare_useky(session, path, blocks):
 
     items = []
     for item in blocks.split(';'):
@@ -353,8 +353,15 @@ def _prepare_useky(session, id_, blocks):
             'block': get_block_by_id(session, item),
         })
 
-    if not isinstance(items[-1]['block'], Signal):
-        logging.warning('JC Blocks doesn\'t ends with Signal for JC.id {}'.format(id_))
+    if not isinstance(items[-1]['block'],
+                      Signal) and not isinstance(get_block_by_id(session,
+                                                                 path.end_id),
+                                                 Track_Section):
+        logging.warning(
+            'JC Blocks doesn\'t ends with Signal for JC.id {}, drive_path.end_id [{}]'.format(
+                path.id, type(
+                    get_block_by_id(
+                        session, path.end_id))))
 
     sections = []
     for item in items:
@@ -371,7 +378,7 @@ def _prepare_useky(session, id_, blocks):
     signals = []
     for i in range(len(items) - 1):  # len(items) - 1 => vynechavame posledni Signal, pokud chybi, nema to vliv
         if isinstance(items[i]['block'], Signal) and i == 0:
-            logging.warning('JC Blocks starts with Signal for JC.id {}'.format(id_))
+            logging.warning('JC Blocks starts with Signal for JC.id {}'.format(path.id))
 
         if isinstance(items[i]['block'], Signal) and i != 0:
             signals.append('({},{})'.format(items[i - 1]['id'], items[i]['id']))
@@ -464,7 +471,7 @@ def write_drive_path(session):
     blocks = []
     for drive_path in session.query(Drive_Path).order_by(Drive_Path.id).all():
 
-        useky, prisl = _prepare_useky(session, drive_path.id, drive_path.blocks)
+        useky, prisl = _prepare_useky(session, drive_path, drive_path.blocks)
         vyhybky = _prepare_vyhybky(session, drive_path.id, drive_path.prestavniky)
         odvraty = _prepare_odvraty(session, drive_path.id, drive_path.odvraty_mimo)
         variantni_body = prepare_variantni_body(drive_path)
