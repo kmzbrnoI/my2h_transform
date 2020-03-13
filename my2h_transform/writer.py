@@ -510,6 +510,16 @@ def write_drive_path(session):
         if variantni_body:
             data['vb'] = ';'.join(variantni_body) + ';'
 
+        if trat:
+            assert drive_path.blocks.split(';')[-1] == useky[-1], \
+                f'Last block of "trat" drive path {drive_path} is a signal!'
+            data['DalsiNTyp'] = 1
+        elif drive_path.typ == 1:
+            assert drive_path.blocks.split(';')[-1] != useky[-1], \
+                f'Last block of "non-trat" drive path {drive_path} is not a signal!'
+            data['DalsiNTyp'] = 2
+            data['DalsiN'] = drive_path.blocks.split(';')[-1]
+
         blocks.append({
             'id': drive_path.id,
             'data': data,
