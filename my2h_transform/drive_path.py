@@ -61,7 +61,7 @@ def save_drive_paths(session, data):
             'control_area': item[3],
             'start_id': item[4],
             'end_id': item[5],
-            'velocity': item[6],
+            'velocity': 40 if int(item[6]) == 0 else item[6],
             'nedostVzdalenost': item[7],
             'var_bod_0': item[8],
             'var_bod_1': item[9],
