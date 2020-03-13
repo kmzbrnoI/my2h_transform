@@ -497,7 +497,7 @@ def write_drive_path(session):
         if trat:
             data['trat'] = trat
 
-        data['usely'] = ','.join(useky) + ','
+        data['useky'] = ','.join(useky) + ','
         data['prisl'] = ''.join(prisl)
 
         if vyhybky:
