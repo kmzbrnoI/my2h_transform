@@ -466,6 +466,15 @@ def prepare_variantni_body(path):
     return variantni_body if len(variantni_body) else None
 
 
+def prepare_trat(session, path):
+
+    last_block = get_block_by_id(session, path.end_id)
+    if isinstance(last_block, Track_Section):
+        return last_block.railway
+    else:
+        return None
+
+
 def write_drive_path(session):
 
     blocks = []
@@ -475,6 +484,7 @@ def write_drive_path(session):
         vyhybky = _prepare_vyhybky(session, drive_path.id, drive_path.prestavniky)
         odvraty = _prepare_odvraty(session, drive_path.id, drive_path.odvraty_mimo)
         variantni_body = prepare_variantni_body(drive_path)
+        trat = prepare_trat(session, drive_path)
 
         data = {
             'Nazev': _prepare_drive_path_name(session, drive_path),
@@ -482,9 +492,13 @@ def write_drive_path(session):
             'Typ': drive_path.typ,
             'RychDalsiN': '{0:g}'.format(drive_path.velocity / 10),
             'RychNoDalsiN': '{0:g}'.format(drive_path.velocity / 10),
-            'useky': ','.join(useky) + ',',
-            'prisl': ''.join(prisl),
         }
+
+        if trat:
+            data['trat'] = trat
+
+        data['usely'] = ','.join(useky) + ','
+        data['prisl'] = ''.join(prisl)
 
         if vyhybky:
             data['vyhybky'] = ''.join(vyhybky)
