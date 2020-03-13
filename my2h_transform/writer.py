@@ -354,10 +354,9 @@ def _prepare_useky(session, path, blocks):
             'block': get_block_by_id(session, item),
         })
 
-    if not isinstance(items[-1]['block'],
-                      Signal) and not isinstance(get_block_by_id(session,
-                                                                 path.end_id),
-                                                 Track_Section):
+    if (not isinstance(items[-1]['block'], Signal) and
+        not isinstance(get_block_by_id(session, path.end_id), Track_Section) and
+            path.typ == 1):
         logging.warning(
             'JC Blocks doesn\'t ends with Signal for JC.id {}, drive_path.end_id [{}]'.format(
                 path.id, type(
