@@ -326,3 +326,5 @@ class Drive_Path(BASE):
 
     def __str__(self) -> str:
         return str(self.id)
+
+    __repr__ = __str__

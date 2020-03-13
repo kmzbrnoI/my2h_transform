@@ -99,7 +99,7 @@ def main():
         logging.info('reid_block_map succesfully saved in file [{}].'.format(output_blocks_file))
 
 
-        data = [{'old_id': old, 'new_id': new} for old, new in drive_path_ids_old_to_new(session)]
+        data = [{'old_id': old, 'new_id': new} for old, new in drive_path_ids_old_to_new(session).items()]
         with open(output_paths_file, 'w', newline='') as csvfile:
             fieldnames = ['old_id', 'new_id']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
