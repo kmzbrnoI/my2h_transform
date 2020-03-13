@@ -492,9 +492,20 @@ def write_drive_path(session):
             'Nazev': _prepare_drive_path_name(session, drive_path),
             'Nav': drive_path.start_id,
             'Typ': drive_path.typ,
-            'RychDalsiN': '{0:g}'.format(drive_path.velocity / 10),
-            'RychNoDalsiN': '{0:g}'.format(drive_path.velocity / 10),
         }
+
+        if trat:
+            assert drive_path.blocks.split(';')[-1] == useky[-1], \
+                f'Last block of "trat" drive path {drive_path} is a signal!'
+            data['DalsiNTyp'] = 1
+        elif drive_path.typ == 1:
+            assert drive_path.blocks.split(';')[-1] != useky[-1], \
+                f'Last block of "non-trat" drive path {drive_path} is not a signal!'
+            data['DalsiNTyp'] = 2
+            data['DalsiN'] = drive_path.blocks.split(';')[-1]
+
+        data['RychDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
+        data['RychNoDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
 
         if trat:
             data['Trat'] = trat
@@ -509,16 +520,6 @@ def write_drive_path(session):
             data['odvraty'] = ''.join(odvraty)
         if variantni_body:
             data['vb'] = ';'.join(variantni_body) + ';'
-
-        if trat:
-            assert drive_path.blocks.split(';')[-1] == useky[-1], \
-                f'Last block of "trat" drive path {drive_path} is a signal!'
-            data['DalsiNTyp'] = 1
-        elif drive_path.typ == 1:
-            assert drive_path.blocks.split(';')[-1] != useky[-1], \
-                f'Last block of "non-trat" drive path {drive_path} is not a signal!'
-            data['DalsiNTyp'] = 2
-            data['DalsiN'] = drive_path.blocks.split(';')[-1]
 
         blocks.append({
             'id': drive_path.id,
