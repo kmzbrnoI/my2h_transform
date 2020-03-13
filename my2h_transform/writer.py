@@ -2,6 +2,7 @@ import logging
 from utils import get_block_by_id
 from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR, Drive_Path
 from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
+from railway import section_directions
 
 
 def prepare_data_for_section(section, parent, capitalize=True, track=False):
@@ -477,6 +478,8 @@ def prepare_trat(session, path):
 
 def write_drive_path(session):
 
+    sect_dirs = section_directions(session)
+
     blocks = []
     for drive_path in session.query(Drive_Path).order_by(Drive_Path.id).all():
 
@@ -495,7 +498,8 @@ def write_drive_path(session):
         }
 
         if trat:
-            data['trat'] = trat
+            data['Trat'] = trat
+            data['TratSmer'] = sect_dirs[(trat, drive_path.control_area)]
 
         data['useky'] = ','.join(useky) + ','
         data['prisl'] = ''.join(prisl)
