@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 from storage import Track_Section, Signal, Junction, Disconnector, BLK, BLM, Control_Area
 from typing import Dict, List, Any, Iterable, Union
 import functools
@@ -142,7 +144,9 @@ def ids_old_to_new(session) -> Dict[int, int]:
         for j, railway in enumerate(railways):
             remap[railway.id] = trat_id + 10 + j
 
-        signals = session.query(Signal).filter(Signal.signal_type == 'autoblok', Signal.trat1 == trat).\
+        signals = session.query(Signal).filter(
+            or_(Signal.signal_type == 'autoblok', Signal.signal_type == 'hradlo'),
+            Signal.trat1 == trat).\
             order_by(Signal.id).all()
         for j, signal in enumerate(signals):
             remap[signal.id] = trat_id + 50 + j
