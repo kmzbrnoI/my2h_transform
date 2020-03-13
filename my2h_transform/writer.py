@@ -429,6 +429,26 @@ def _prepare_drive_path_name(session, path):
     return '{} > {}'.format(name1, name2)
 
 
+def _prepare_odvraty(session, id_, blocks):
+
+    if not blocks:
+        return None
+
+    odvraty = []
+    for item in blocks.split(';'):
+
+        d0 = item.split('-')[0]
+        d1 = item.split('-')[1]
+        d2 = item.split('-')[2]
+        d3 = item.split('-')[3]
+
+        assert int(d3) == 0, f"WARN: {id_} has wrong last odvrat"
+
+        odvraty.append('({},{},{})'.format(d0, int(d1) - 1, d2))
+
+    return odvraty
+
+
 def write_drive_path(session):
 
     blocks = []
@@ -436,6 +456,7 @@ def write_drive_path(session):
 
         useky, prisl = _prepare_useky(session, drive_path.id, drive_path.blocks)
         vyhybky = _prepare_vyhybky(session, drive_path.id, drive_path.prestavniky)
+        odvraty = _prepare_odvraty(session, drive_path.id, drive_path.odvraty_mimo)
 
         data = {
             'Nazev': _prepare_drive_path_name(session, drive_path),
@@ -449,6 +470,8 @@ def write_drive_path(session):
 
         if vyhybky:
             data['vyhybky'] = ''.join(vyhybky)
+        if odvraty:
+            data['odvraty'] = ''.join(odvraty)
 
         blocks.append({
             'id': drive_path.id,
