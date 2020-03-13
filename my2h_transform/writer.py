@@ -502,7 +502,7 @@ def write_drive_path(session):
             data['TratSmer'] = sect_dirs[(trat, drive_path.control_area)]
 
         data['useky'] = ','.join(useky) + ','
-        data['prisl'] = ''.join(prisl)
+        # data['prisl'] = ''.join(prisl)  # avoided due to new hJOP version
 
         if vyhybky:
             data['vyhybky'] = ''.join(vyhybky)
