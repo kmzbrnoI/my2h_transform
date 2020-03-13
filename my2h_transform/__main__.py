@@ -29,7 +29,7 @@ from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
 from storage import BASE, IR, Drive_Path
 from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector, write_ir, write_drive_path
-from reid import ids_old_to_new
+from reid_blocks import ids_old_to_new
 from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector, remap_drive_path
 from drive_path import load_drive_paths, save_drive_paths
 from create_ir import create_ir
