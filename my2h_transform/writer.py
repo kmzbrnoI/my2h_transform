@@ -489,9 +489,9 @@ def write_drive_path(session):
         trat = prepare_trat(session, drive_path)
 
         data = {
-            'Nazev': _prepare_drive_path_name(session, drive_path),
-            'Nav': drive_path.start_id,
-            'Typ': drive_path.typ,
+            'nazev': _prepare_drive_path_name(session, drive_path),
+            'nav': drive_path.start_id,
+            'typ': drive_path.typ,
         }
 
         if trat:
@@ -501,15 +501,15 @@ def write_drive_path(session):
         elif drive_path.typ == 1:
             assert drive_path.blocks.split(';')[-1] != useky[-1], \
                 f'Last block of "non-trat" drive path {drive_path} is not a signal!'
-            data['DalsiNTyp'] = 2
-            data['DalsiN'] = drive_path.blocks.split(';')[-1]
+            data['dalsiNTyp'] = 2
+            data['dalsiN'] = drive_path.blocks.split(';')[-1]
 
-        data['RychDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
-        data['RychNoDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
+        data['rychDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
+        data['rychNoDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
 
         if trat:
-            data['Trat'] = trat
-            data['TratSmer'] = sect_dirs[(trat, drive_path.control_area)]
+            data['trat'] = trat
+            data['tratSmer'] = sect_dirs[(trat, drive_path.control_area)]
 
         data['useky'] = ','.join(useky) + ','
         # data['prisl'] = ''.join(prisl)  # avoided due to new hJOP version
