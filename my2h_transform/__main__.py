@@ -2,7 +2,7 @@
 Usage:
   my2h_transform.py load_blocks <myjop_blk_file> <myjop_ztb_file> <output_db_file>
   my2h_transform.py reid <source_db_file> <output_blocks_csv> <output_paths_csv>
-  my2h_transform.py remap_by_reid <source_db_file> <reid_csv> <output_db_file>
+  my2h_transform.py remap_by_reid <source_db_file> <blocks_reid_csv> <paths_reid_csv> <output_db_file>
   my2h_transform.py create_ir <db_file>
   my2h_transform.py create_ini <source_db_file> <output_ini_file>
   my2h_transform.py create_jc_ini <source_db_file> <output_ini_file>
@@ -110,7 +110,8 @@ def main():
     if args['remap_by_reid']:
 
         source_file = os.path.abspath(args['<source_db_file>'])
-        reid_file = os.path.abspath(args['<reid_csv>'])
+        blocks_reid_file = os.path.abspath(args['<blocks_reid_csv>'])
+        paths_reid_file = os.path.abspath(args['<paths_reid_csv>'])
         output_file = os.path.abspath(args['<output_db_file>'])
 
         remove_file(output_file)
@@ -125,22 +126,28 @@ def main():
         Output_SQLSession = sessionmaker(bind=Output_SQLEngine)
         output_session = Output_SQLSession()
 
-        reid = {}
-        with open(reid_file, newline='') as csvfile:
+        blocks_reid = {}
+        with open(blocks_reid_file, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                reid[row['old_id']] = row['new_id']
+                blocks_reid[row['old_id']] = row['new_id']
 
-        remap_control_area(reid, source_session, output_session)
-        remap_railway(reid, source_session, output_session)
-        remap_track_section(reid, source_session, output_session)
-        remap_blm(reid, source_session, output_session)
-        remap_blk(reid, source_session, output_session)
-        remap_signal(reid, source_session, output_session)
-        remap_junction(reid, source_session, output_session)
-        remap_disconnector(reid, source_session, output_session)
+        paths_reid = {}
+        with open(paths_reid_file, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                paths_reid[row['old_id']] = row['new_id']
 
-        remap_drive_path(reid, source_session, output_session)
+        remap_control_area(blocks_reid, source_session, output_session)
+        remap_railway(blocks_reid, source_session, output_session)
+        remap_track_section(blocks_reid, source_session, output_session)
+        remap_blm(blocks_reid, source_session, output_session)
+        remap_blk(blocks_reid, source_session, output_session)
+        remap_signal(blocks_reid, source_session, output_session)
+        remap_junction(blocks_reid, source_session, output_session)
+        remap_disconnector(blocks_reid, source_session, output_session)
+
+        remap_drive_path(blocks_reid, paths_reid, source_session, output_session)
 
 #        blps
 #        pnls

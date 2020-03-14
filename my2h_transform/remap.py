@@ -165,26 +165,27 @@ def _remap_volnosti(reid, session, data):
     return ';'.join(ids)
 
 
-def remap_drive_path(reid, source_session, output_session):
+def remap_drive_path(blocks_reid, paths_reid, source_session, output_session):
 
     data = []
     for item in source_session.query(Drive_Path).all():
         source_session.expunge(item)
         make_transient(item)
 
-        item.control_area = _remap(reid, item.control_area)
-        item.start_id = _remap(reid, item.start_id)
-        item.end_id = _remap(reid, item.end_id)
-        item.var_bod_0 = _remap(reid, item.var_bod_0)
-        item.var_bod_1 = _remap(reid, item.var_bod_1)
-        item.var_bod_2 = _remap(reid, item.var_bod_2)
-        item.var_bod_3 = _remap(reid, item.var_bod_3)
-        item.var_bod_4 = _remap(reid, item.var_bod_4)
-        item.blocks = _remap_blocks(reid, source_session, item.blocks)
-        item.prestavniky = _remap_prestavniky(reid, source_session, item.prestavniky)
-        item.odvraty_mimo = _remap_odvraty_mimo(reid, source_session, item.odvraty_mimo)
-        item.odvraty_v = _remap_prestavniky(reid, source_session, item.odvraty_v)  # vazne stejna signatura
-        item.volnosti = _remap_volnosti(reid, source_session, item.volnosti)
+        item.id = _remap(paths_reid, item.id)
+        item.control_area = _remap(blocks_reid, item.control_area)
+        item.start_id = _remap(blocks_reid, item.start_id)
+        item.end_id = _remap(blocks_reid, item.end_id)
+        item.var_bod_0 = _remap(blocks_reid, item.var_bod_0)
+        item.var_bod_1 = _remap(blocks_reid, item.var_bod_1)
+        item.var_bod_2 = _remap(blocks_reid, item.var_bod_2)
+        item.var_bod_3 = _remap(blocks_reid, item.var_bod_3)
+        item.var_bod_4 = _remap(blocks_reid, item.var_bod_4)
+        item.blocks = _remap_blocks(blocks_reid, source_session, item.blocks)
+        item.prestavniky = _remap_prestavniky(blocks_reid, source_session, item.prestavniky)
+        item.odvraty_mimo = _remap_odvraty_mimo(blocks_reid, source_session, item.odvraty_mimo)
+        item.odvraty_v = _remap_prestavniky(blocks_reid, source_session, item.odvraty_v)  # vazne stejna signatura
+        item.volnosti = _remap_volnosti(blocks_reid, source_session, item.volnosti)
         data.append(item)
 
     output_session.add_all(data)
