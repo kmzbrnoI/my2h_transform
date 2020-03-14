@@ -497,15 +497,15 @@ def write_drive_path(session):
         if trat:
             assert drive_path.blocks.split(';')[-1] == useky[-1], \
                 f'Last block of "trat" drive path {drive_path} is a signal!'
-            data['DalsiNTyp'] = 1
+            data['dalsiNTyp'] = 1
         elif drive_path.typ == 1:
             assert drive_path.blocks.split(';')[-1] != useky[-1], \
                 f'Last block of "non-trat" drive path {drive_path} is not a signal!'
             data['dalsiNTyp'] = 2
             data['dalsiN'] = drive_path.blocks.split(';')[-1]
 
-        data['rychDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
-        data['rychNoDalsiN'] = '{0:g}'.format(drive_path.velocity / 10),
+        data['rychDalsiN'] = '{:d}'.format(drive_path.velocity // 10)
+        data['rychNoDalsiN'] = '{:d}'.format(drive_path.velocity // 10)
 
         if trat:
             data['trat'] = trat
