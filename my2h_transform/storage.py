@@ -328,3 +328,18 @@ class Drive_Path(BASE):
         return str(self.id)
 
     __repr__ = __str__
+
+
+class Composite_Drive_Path(BASE):
+
+    __tablename__ = 'composite_drive_paths'
+
+    id = Column(Integer, primary_key=True)
+    typ = Column(Integer)
+    paths = Column(String)
+    vb = Column(String)
+
+    def __str__(self) -> str:
+        return str(self.id)
+
+    __repr__ = __str__

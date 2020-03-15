@@ -24,6 +24,9 @@ MyJOP To hJOP Transform Utility
     # Create IR table
     python my2h_transform create_ir new_blk.db
 
+    # Create composite_drive_paths (aka mJC) table
+    python my2h_transform create_jmc new_blk.db
+
     # Create .ini file for hJOP from new_blk.db
     python my2h_transform create_ini new_blk.db blk.ini
 
