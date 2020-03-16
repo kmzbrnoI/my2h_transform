@@ -113,6 +113,7 @@ def create_jmc(session):
     train_traces = []
     for path in train_paths:
         traced = _trace_paths(session, train_paths, train_paths_by_signals, path)
+        traced = list(filter(lambda paths: len(paths) > 1, traced))
         train_traces.extend(traced)
 
     # shunt_traces = []
