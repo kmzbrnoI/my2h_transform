@@ -98,7 +98,7 @@ def create_jmc(session):
 
     shunt_traces = []
     for path in all_paths:
-        shunt_traces.append(_trace_paths(session, all_paths, train_paths_by_signals, path))
+        shunt_traces.append(_trace_paths(session, all_paths, shunt_paths_by_signals, path))
 
     for item in train_traces:
         print(item)
