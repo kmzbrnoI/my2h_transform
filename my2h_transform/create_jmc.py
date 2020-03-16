@@ -162,7 +162,7 @@ def create_jmc(session) -> None:
     next_id_per_area = {}
     for id_, start_of_blocks in CONTROL_AREA_IDS.items():
         next_id_per_area[(id_, 1)] = 10*start_of_blocks  # train
-        next_id_per_area[(id_, 2)] = 10*start_of_blocks + 500  # shunt
+        next_id_per_area[(id_, 2)] = 10*start_of_blocks + 5000  # shunt
 
     for cpath in all_cpaths:
         same_startend_count = _no_cpaths_with_start_and_end(cpath, all_cpaths)
@@ -185,5 +185,4 @@ def create_jmc(session) -> None:
 
         next_id_per_area[(cpath[0].control_area, cpath[0].typ)] += 1
 
-    print(next_id_per_area)
     session.commit()
