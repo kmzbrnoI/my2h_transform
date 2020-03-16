@@ -97,7 +97,11 @@ def _trace_paths(session, all_paths, paths_by_signals, path) -> List[List[Valued
         traces_ = _trace_paths(session, all_paths, paths_by_signals, possible_path)
         for trace in traces_:
             trace.insert(0, path)
-        traces.extend(traces_)
+
+        # add also all prefixes
+        for trace in traces_:
+            for length in range(2, len(trace)+1):
+                traces.append(trace[:length])
 
     return traces
 
@@ -114,7 +118,11 @@ def create_jmc(session):
     for path in train_paths:
         traced = _trace_paths(session, train_paths, train_paths_by_signals, path)
         traced = list(filter(lambda paths: len(paths) > 1, traced))
-        train_traces.extend(traced)
+
+        # do not insert duplicities
+        for item in traced:
+            if item not in train_traces:
+                train_traces.append(item)
 
     # shunt_traces = []
     # for path in all_paths:
@@ -122,6 +130,7 @@ def create_jmc(session):
 
     for trace in train_traces:
         print(trace)
+    print(len(train_traces))
 
     # for item in shunt_traces:
     #     print(item)
