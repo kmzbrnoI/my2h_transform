@@ -24,7 +24,10 @@ class Valued_Drive_Path:
         self.last_block = last_block
 
     def __str__(self) -> str:
-        return self.start.name + ' > ' + self.last_block.name
+        res = self.start.name + ' > ' + self.target.name
+        if self.variant_points != []:
+            res += ' ' + str(self.variant_points)
+        return res
 
     __repr__ = __str__
 
@@ -102,21 +105,22 @@ def _trace_paths(session, all_paths, paths_by_signals, path) -> List[List[Valued
 def create_jmc(session):
 
     all_paths = _get_drive_paths(session)
+    train_paths = list(filter(lambda path: path.typ == 1, all_paths))
+    shunt_paths = list(filter(lambda path: path.typ == 2, all_paths))
     train_paths_by_signals = _get_paths_by_signals(all_paths, 1)
     shunt_paths_by_signals = _get_paths_by_signals(all_paths, 2)
 
     train_traces = []
-    for path in all_paths:
-        train_traces.append(_trace_paths(session, all_paths, train_paths_by_signals, path))
+    for path in train_paths:
+        traced = _trace_paths(session, train_paths, train_paths_by_signals, path)
+        train_traces.extend(traced)
 
     # shunt_traces = []
     # for path in all_paths:
     #     shunt_traces.append(_trace_paths(session, all_paths, shunt_paths_by_signals, path))
 
-    for trace in train_traces[0]:
+    for trace in train_traces:
         print(trace)
-    # for item in train_traces:
-    #     print(item)
 
     # for item in shunt_traces:
     #     print(item)
