@@ -545,13 +545,15 @@ def write_composite_drive_path(session):
 
     paths = []
     for drive_path in session.query(Composite_Drive_Path).order_by(Composite_Drive_Path.id).all():
+        data = {
+            'nazev': _prepare_composite_drive_path_name(session, drive_path),
+            'JCs': drive_path.paths.replace(',', ';') + ';',
+        }
+        if drive_path.vb != '':
+            data['vb'] = drive_path.vb.replace(',', ';') + ';'
         paths.append({
             'id': drive_path.id,
-            'data': {
-                'nazev': _prepare_composite_drive_path_name(session, drive_path),
-                'JCs': drive_path.paths.replace(',', ';') + ';',
-                'vb': drive_path.vb.replace(',', ';') + ';',
-            },
+            'data': data,
         })
 
     return paths
