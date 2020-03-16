@@ -124,13 +124,18 @@ def create_jmc(session):
             if item not in train_traces:
                 train_traces.append(item)
 
-    # shunt_traces = []
-    # for path in all_paths:
-    #     shunt_traces.append(_trace_paths(session, all_paths, shunt_paths_by_signals, path))
+    shunt_traces = []
+    for path in shunt_paths:
+        traced = _trace_paths(session, shunt_paths, shunt_paths_by_signals, path)
+        traced = list(filter(lambda paths: len(paths) > 1, traced))
+
+        # do not insert duplicities
+        for item in traced:
+            if item not in shunt_traces:
+                shunt_traces.append(item)
 
     for trace in train_traces:
         print(trace)
-    print(len(train_traces))
 
-    # for item in shunt_traces:
-    #     print(item)
+    for trace in shunt_traces:
+        print(trace)
