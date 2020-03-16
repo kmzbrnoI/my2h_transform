@@ -1,7 +1,8 @@
 from utils import get_block_by_id
 from storage import Signal, Drive_Path, Composite_Drive_Path
+from create_ir import CONTROL_AREA_IDS
 
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 
 def _ignore(drive_path):
@@ -22,6 +23,7 @@ class Valued_Drive_Path:
         self.variant_points = variant_points
         self.target = target
         self.last_block = last_block
+        self.control_area = start.control_area
 
     def __str__(self) -> str:
         res = self.start.name + ' > ' + self.target.name
@@ -106,7 +108,12 @@ def _trace_paths(session, all_paths, paths_by_signals, path) -> List[List[Valued
     return traces
 
 
-def create_jmc(session):
+Composite_List_Path = List[Valued_Drive_Path]
+Train_Paths = List[Composite_List_Path]
+Shunt_Paths = List[Composite_List_Path]
+
+
+def _all_jmcs(session) -> Tuple[Train_Paths, Shunt_Paths]:
 
     all_paths = _get_drive_paths(session)
     train_paths = list(filter(lambda path: path.typ == 1, all_paths))
@@ -134,8 +141,49 @@ def create_jmc(session):
             if item not in shunt_traces:
                 shunt_traces.append(item)
 
-    for trace in train_traces:
-        print(trace)
+    return train_traces, shunt_traces
 
-    for trace in shunt_traces:
-        print(trace)
+
+def _no_cpaths_with_start_and_end(cpath: Composite_List_Path, all_cpaths: List[Composite_List_Path]) -> int:
+    count = 0
+    for cpathi in all_cpaths:
+        if cpathi[0].start == cpath[0].start and cpathi[-1].target == cpath[-1].target:
+            count += 1
+    return count
+
+
+def create_jmc(session) -> None:
+
+    session.query(Composite_Drive_Path).delete()
+
+    train_cpaths, shunt_cpaths = _all_jmcs(session)
+    all_cpaths = train_cpaths + shunt_cpaths
+
+    next_id_per_area = {}
+    for id_, start_of_blocks in CONTROL_AREA_IDS.items():
+        next_id_per_area[(id_, 1)] = 10*start_of_blocks  # train
+        next_id_per_area[(id_, 2)] = 10*start_of_blocks + 500  # shunt
+
+    for cpath in all_cpaths:
+        same_startend_count = _no_cpaths_with_start_and_end(cpath, all_cpaths)
+        if same_startend_count == 1:
+            vb = ''
+        else:
+            vbs = []
+            for path in cpath[:-1]:
+                vbs.extend(path.variant_points)
+                vbs.append(path.target)
+            vbs.extend(cpath[-1].variant_points)
+            vb = ','.join(str(varb.id) for varb in vbs)
+
+        session.add(Composite_Drive_Path(
+            id=next_id_per_area[(cpath[0].control_area, cpath[0].typ)],
+            typ=cpath[0].typ,
+            paths=','.join(map(lambda path: str(path.id), cpath)),
+            vb=vb,
+        ))
+
+        next_id_per_area[(cpath[0].control_area, cpath[0].typ)] += 1
+
+    print(next_id_per_area)
+    session.commit()
