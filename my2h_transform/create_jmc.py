@@ -10,6 +10,9 @@ def _ignore(drive_path):
         drive_path.end_id in [3100, 3101, 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109]):
         # Hrad smycka
         return True
+    if drive_path.start_id >= 6404 and drive_path.start_id <= 6449:
+        # Brizky
+        return True
 
     return False
 
