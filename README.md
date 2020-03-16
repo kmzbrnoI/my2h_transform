@@ -33,6 +33,10 @@ MyJOP To hJOP Transform Utility
     # Create .ini file for hJOP 'jizdni cesty' from new_blk.db
     python my2h_transform create_jc_ini new_blk.db JC.ini
 
+    # Create .ini file for hJOP 'slozene jizdni cesty' from new_blk.db
+    python my2h_transform create_mjc_ini new_blk.db mJC.ini
+
+
 
 ## Development & Contributions
 

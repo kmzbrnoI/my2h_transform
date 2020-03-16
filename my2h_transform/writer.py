@@ -1,6 +1,7 @@
 import logging
 from utils import get_block_by_id
-from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR, Drive_Path
+from storage import Control_Area, Railway, Track_Section, BLM, BLK, Signal, Junction, Disconnector, IR, Drive_Path, \
+        Composite_Drive_Path
 from booster_reid import BOOSTER_REMAP, BOOSTER_FROM_CONTROL_AREA, BOOSTER_FROM_BLOCK_ID
 from railway import section_directions
 
@@ -411,19 +412,18 @@ def _prepare_vyhybky(session, id_, blocks):
     return vyhybky
 
 
-def _prepare_drive_path_name(session, path):
-
-    signal1 = get_block_by_id(session, path.start_id)
+def _drive_path_name(session, start_path, end_path) -> str:
+    signal1 = get_block_by_id(session, start_path.start_id)
     # railway signals
     if signal1.control_area is None:
-        railway1 = get_block_by_id(session, signal1.trat1)
+        railway = get_block_by_id(session, signal1.trat1)
         name1 = railway.shortname + ' ' + signal1.name
     # area signals
     else:  #
         area1 = get_block_by_id(session, signal1.control_area)
         name1 = area1.shortname.split(' ', 1)[0].capitalize() + ' ' + signal1.name
 
-    section2 = get_block_by_id(session, path.end_id)
+    section2 = get_block_by_id(session, end_path.end_id)
     if isinstance(section2, Track_Section):
         railway2 = get_block_by_id(session, section2.railway)
         name2 = prepare_data_for_section(section2, railway2, capitalize=False, track=True)['nazev']
@@ -431,9 +431,13 @@ def _prepare_drive_path_name(session, path):
         area2 = get_block_by_id(session, section2.control_area)
         name2 = prepare_data_for_section(section2, area2)['nazev']
     else:
-        logging.warning('JC end_id contains unexpected block {}, JC.id {}'.format(type(section2), path.id))
+        logging.warning('JC end_id contains unexpected block {}, JC.id {}'.format(type(section2), end_path.id))
 
     return '{} > {}'.format(name1, name2)
+
+
+def _prepare_drive_path_name(session, path):
+    return _drive_path_name(session, path, path)
 
 
 def _prepare_odvraty(session, id_, blocks):
@@ -527,3 +531,27 @@ def write_drive_path(session):
         })
 
     return blocks
+
+
+def _prepare_composite_drive_path_name(session, cpath):
+    paths = cpath.paths.split(',')
+    start_path = session.query(Drive_Path).get(paths[0])
+    end_path = session.query(Drive_Path).get(paths[-1])
+
+    return _drive_path_name(session, start_path, end_path)
+
+
+def write_composite_drive_path(session):
+
+    paths = []
+    for drive_path in session.query(Composite_Drive_Path).order_by(Composite_Drive_Path.id).all():
+        paths.append({
+            'id': drive_path.id,
+            'data': {
+                'nazev': _prepare_composite_drive_path_name(session, drive_path),
+                'JCs': drive_path.paths.replace(',', ';') + ';',
+                'vb': drive_path.vb.replace(',', ';') + ';',
+            },
+        })
+
+    return paths

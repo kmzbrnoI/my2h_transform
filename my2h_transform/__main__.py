@@ -7,6 +7,7 @@ Usage:
   my2h_transform.py create_jmc <db_file>
   my2h_transform.py create_ini <source_db_file> <output_ini_file>
   my2h_transform.py create_jc_ini <source_db_file> <output_ini_file>
+  my2h_transform.py create_mjc_ini <source_db_file> <output_ini_file>
   my2h_transform.py show_path <db_file> <path_id>
   my2h_transform.py (-h | --help)
   my2h_transform.py --version
@@ -29,7 +30,7 @@ from sqlalchemy.orm import sessionmaker
 from utils import DATASET_TYPES, remove_file, load_datasets, all_blocks
 from dataset import save_datasets
 from storage import BASE, IR, Drive_Path, Composite_Drive_Path
-from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector, write_ir, write_drive_path
+from writer import write_railway, write_track_section, write_section, write_signal, write_junction, write_disconnector, write_ir, write_drive_path, write_composite_drive_path
 from reid_blocks import ids_old_to_new as block_ids_old_to_new
 from reid_drive_paths import ids_old_to_new as drive_path_ids_old_to_new
 from remap import remap_control_area, remap_railway, remap_track_section, remap_blm, remap_blk, remap_signal, remap_junction, remap_disconnector, remap_drive_path
@@ -216,6 +217,32 @@ def main():
             config.write(configfile, space_around_delimiters=False)
 
         logging.info('hJOP "jizdni cesty" succesfully saved in file [{}].'.format(output_file))
+
+    if args['create_mjc_ini']:
+
+        source_file = os.path.abspath(args['<source_db_file>'])
+        output_file = os.path.abspath(args['<output_ini_file>'])
+
+        remove_file(output_file)
+
+        SQLEngine = create_engine('sqlite:///{}'.format(source_file), echo=False)
+        # BASE.metadata.create_all(SQLEngine)
+        SQLSession = sessionmaker(bind=SQLEngine)
+        session = SQLSession()
+
+        drive_paths = []
+        drive_paths.extend(write_composite_drive_path(session))
+
+        config = configparser.ConfigParser()
+        config.optionxform = str
+
+        for drive_path in sorted(drive_paths, key=lambda k: k['id']):
+            config[drive_path['id']] = drive_path['data']
+
+        with open(output_file, 'w') as configfile:
+            config.write(configfile, space_around_delimiters=False)
+
+        logging.info('hJOP "slozene jizdni cesty" succesfully saved in file [{}].'.format(output_file))
 
     if args['create_ir']:
         db_file = os.path.abspath(args['<db_file>'])
