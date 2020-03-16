@@ -33,6 +33,9 @@ MyJOP To hJOP Transform Utility
     # Create .ini file for hJOP 'jizdni cesty' from new_blk.db
     python my2h_transform create_jc_ini new_blk.db JC.ini
 
+    # Convert loco from .lok to 2lok
+    python loco convert zadani/L_7540.lok L_7540.2lok
+
 
 ## Development & Contributions
 
