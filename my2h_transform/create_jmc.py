@@ -1,6 +1,8 @@
 from utils import get_block_by_id
 from storage import Signal, Drive_Path, Composite_Drive_Path
 
+from typing import Dict, List
+
 
 def _ignore(drive_path):
     if (drive_path.start_id in [3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424] and
@@ -11,7 +13,23 @@ def _ignore(drive_path):
     return False
 
 
-def _get_drive_paths(session):
+class Valued_Drive_Path:
+    def __init__(self, id_: int, typ: int, start: Signal, variant_points: List['Block'],
+                 target: 'Block', last_block: 'Block'):
+        self.id = id_
+        self.typ = typ
+        self.start = start
+        self.variant_points = variant_points
+        self.target = target
+        self.last_block = last_block
+
+    def __str__(self) -> str:
+        return self.start.name + ' > ' + self.last_block.name
+
+    __repr__ = __str__
+
+
+def _get_drive_paths(session) -> List[Valued_Drive_Path]:
 
     all_paths = []
 
@@ -28,60 +46,55 @@ def _get_drive_paths(session):
 
         last_block = get_block_by_id(session, path.blocks.split(';')[-1])
 
-        all_paths.append({
-            'id': path.id,
-            'typ': path.typ,
-            'start': get_block_by_id(session, path.start_id),
-            'variant_points': variant_points,
-            'target': get_block_by_id(session, path.end_id),
-            'last_block': last_block,
-        })
+        all_paths.append(Valued_Drive_Path(
+            id_=path.id,
+            typ=path.typ,
+            start=get_block_by_id(session, path.start_id),
+            variant_points=variant_points,
+            target=get_block_by_id(session, path.end_id),
+            last_block=last_block,
+        ))
 
     return all_paths
 
 
-def _get_paths_by_signals(all_paths, path_type):
+def _get_paths_by_signals(all_paths, path_type) -> Dict[int, List[Valued_Drive_Path]]:
 
-    paths_by_signals = []
+    paths_by_signals = {}
 
     for path in all_paths:
 
-        assert isinstance(path['start'], Signal), 'ERROR: Path [{}] doesn\'t start with Signal'.format(path['id'])
+        assert isinstance(path.start, Signal), 'ERROR: Path [{}] doesn\'t start with Signal'.format(path.id)
 
-        if path['start'].id not in [ e['signal_id'] for e in paths_by_signals ] and path['typ'] == path_type:
-
-            paths_from_signal = []
-            for other_path in all_paths:
-                if path['start'].id == other_path['start'].id and other_path['typ'] == path_type:
-                    paths_from_signal.append(other_path)
-
-            paths_by_signals.append({
-                'signal_id': path['start'].id,
-                'paths': paths_from_signal,
-            })
+        if path.typ == path_type:
+            signal_id = path.start.id
+            if signal_id not in paths_by_signals.keys():
+                paths_by_signals[signal_id] = []
+            paths_by_signals[signal_id].append(path)
 
     return paths_by_signals
 
 
-def _trace_paths(session, all_paths, paths_by_signals, path):
+def _trace_paths(session, all_paths, paths_by_signals, path) -> List[List[Valued_Drive_Path]]:
 
-    if isinstance(path['last_block'], Signal):
-        pass
-    else:
-        return path
+    if not isinstance(path.last_block, Signal):
+        return [[path]]
 
-    end_signal = path['last_block'].id
-    direction = path['last_block'].direction
+    end_signal = path.last_block.id
+    direction = path.last_block.direction
 
-    possible_paths = []
-    for item in paths_by_signals:
-        if end_signal == item['signal_id'] and get_block_by_id(session, item['signal_id']).direction == direction:
-            possible_paths = item['paths']
+    if end_signal not in paths_by_signals:
+        return [[path]]  # no next paths
+
+    next_paths = filter(lambda p: p.start.direction == path.last_block.direction,
+                        paths_by_signals[end_signal])
 
     traces = []
-    for possible_path in possible_paths:
-        trace = _trace_paths(session, all_paths, paths_by_signals, possible_path)
-        traces.append(trace)
+    for possible_path in next_paths:
+        traces_ = _trace_paths(session, all_paths, paths_by_signals, possible_path)
+        for trace in traces_:
+            trace.insert(0, path)
+        traces.extend(traces_)
 
     return traces
 
@@ -89,19 +102,21 @@ def _trace_paths(session, all_paths, paths_by_signals, path):
 def create_jmc(session):
 
     all_paths = _get_drive_paths(session)
-    train_paths_by_signals  = _get_paths_by_signals(all_paths, 1)
-    shunt_paths_by_signals  = _get_paths_by_signals(all_paths, 2)
+    train_paths_by_signals = _get_paths_by_signals(all_paths, 1)
+    shunt_paths_by_signals = _get_paths_by_signals(all_paths, 2)
 
     train_traces = []
     for path in all_paths:
         train_traces.append(_trace_paths(session, all_paths, train_paths_by_signals, path))
 
-    shunt_traces = []
-    for path in all_paths:
-        shunt_traces.append(_trace_paths(session, all_paths, shunt_paths_by_signals, path))
+    # shunt_traces = []
+    # for path in all_paths:
+    #     shunt_traces.append(_trace_paths(session, all_paths, shunt_paths_by_signals, path))
 
-    for item in train_traces:
-        print(item)
+    for trace in train_traces[0]:
+        print(trace)
+    # for item in train_traces:
+    #     print(item)
 
-    for item in shunt_traces:
-        print(item)
+    # for item in shunt_traces:
+    #     print(item)
