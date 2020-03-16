@@ -2,12 +2,23 @@ from utils import get_block_by_id
 from storage import Signal, Drive_Path, Composite_Drive_Path
 
 
+def _ignore(drive_path):
+    if (drive_path.start_id in [3415, 3416, 3417, 3418, 3419, 3420, 3421, 3422, 3423, 3424] and
+        drive_path.end_id in [3100, 3101, 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109]):
+        # Hrad smycka
+        return True
+
+    return False
+
+
 def _get_drive_paths(session):
 
     all_paths = []
 
     drive_paths = session.query(Drive_Path).order_by(Drive_Path.id).all()
     for path in drive_paths:
+        if _ignore(path):
+            continue
 
         variant_points = []
         for bod in [path.var_bod_0, path.var_bod_1, path.var_bod_2, path.var_bod_3]:
