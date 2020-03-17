@@ -64,7 +64,7 @@ class Loco:
         config['global'] = global_data
         config[self.address] = data
 
-        with open(output_fname, 'w') as configfile:
+        with open(output_fname, 'w', encoding='utf8') as configfile:
             config.write(configfile, space_around_delimiters=False)
 
         logging.info(f'Loco succesfully saved in [{output_fname}].')
