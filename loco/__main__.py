@@ -52,6 +52,8 @@ class Loco:
             data['nazev'] = self.name
         if self.owner:
             data['majitel'] = self.owner
+        if '.' in self.name:
+            data['oznaceni'] = self.name
         if self.note:
             data['poznamka'] = self.note
         if self.kind:
